@@ -35,7 +35,6 @@ Icons           → static/icons/
 **Always create your own branch before working.**
 
 ```bash
-git pull
 git checkout -b your-branch-name
 ```
 
