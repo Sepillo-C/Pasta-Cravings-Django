@@ -1,21 +1,338 @@
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html,
 body {
-    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+    height: 100%;
 }
 
-.app-layout {
-    display: flex;
+body {
+    background: #FBF9E4;
+    overflow-x: hidden;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero {
+    position: relative;
+
+    width: 100%;
     min-height: 100vh;
+
+    background: #FBF9E4;
+
+    overflow: hidden;
+
+    border-bottom: 3px solid #A02E2F;
 }
 
-.main-content {
-    flex: 1;
-    padding: 30px;
-    min-width: 0;
+
+/* =====================================================
+   DECORATIVE WAVES
+===================================================== */
+
+.wiggly {
+    position: absolute;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    display: block;
+}
+
+.wiggly-top {
+    top: 0;
+    left: 0;
+
+    /*
+       Reference image:
+       ~180px wide at 776px viewport.
+
+       Scale with viewport.
+    */
+    width: 23.2vw;
+
+    max-width: none;
+}
+
+.wiggly-bottom {
+    right: 0;
+    bottom: 0;
+
+    width: 42.5vw;
+
+    max-width: none;
+}
+
+
+/* =====================================================
+   TITLE
+===================================================== */
+
+.hero h1 {
+    position: relative;
+    z-index: 5;
+
+    margin-top: 7vw;
+
+    text-align: center;
+
+    color: #B53238;
+
+    font-family: "Great Vibes", cursive;
+
+    font-size: 10.2vw;
+    font-weight: 400;
+
+    line-height: 0.8;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   FOOD ROW
+===================================================== */
+
+.food-row {
+    position: relative;
+    z-index: 4;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 2.5vw;
+
+    width: 100%;
+
+    margin-top: 1vw;
+}
+
+.food {
+    flex: 0 0 20vw;
+
+    width: 20vw;
+    height: 20vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.food img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.food-left {
+    margin-left: -17vw;
+}
+
+.food-right {
+    margin-right: -17vw;
+}
+
+
+/* =====================================================
+   BOTTOM CONTENT
+===================================================== */
+
+.hero-content {
+    position: relative;
+    z-index: 5;
+
+    margin-left: 6.3vw;
+    margin-top: 2.5vw;
+
+    width: 55vw;
+}
+
+
+/* =====================================================
+   CTA
+===================================================== */
+
+.cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 35vw;
+    height: 5vw;
+
+    border-radius: 3vw;
+
+    background: #A02E2F;
+    color: #FFFFFF;
+
+    text-decoration: none;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 1.7vw;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.content-line {
+    width: 30vw;
+    height: 2px;
+
+    margin-top: 1.3vw;
+    margin-left: 0.25vw;
+
+    background: #B53238;
+}
+
+.hero-content p {
+    margin-top: 0.7vw;
+
+    color: #B53238;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 1.1vw;
+    line-height: 1.25;
+}
+
+.hero-content p strong {
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   VERY LARGE SCREENS
+===================================================== */
+
+@media (min-width: 1400px) {
+
+    /*
+       Keep the composition proportional,
+       but don't let it become absurdly huge.
+    */
+
+    .hero h1 {
+        font-size: 12.4vw;
+    }
+
+    .food {
+        flex-basis: 24.5vw;
+
+        width: 24.5vw;
+        height: 24.5vw;
+    }
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 800px) {
+
+    .hero h1 {
+        margin-top: 9vw;
+
+        font-size: 12vw;
+    }
+
+    .food-row {
+        gap: 2vw;
+    }
+
+    .food {
+        flex-basis: 24vw;
+
+        width: 24vw;
+        height: 24vw;
+    }
+
+    .food-left {
+        margin-left: -19vw;
+    }
+
+    .food-right {
+        margin-right: -19vw;
+    }
+
+    .hero-content {
+        margin-top: 3vw;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .wiggly-top {
+        width: 24vw;
+    }
+
+    .wiggly-bottom {
+        width: 45vw;
+    }
+
+    .hero h1 {
+        margin-top: 12vw;
+
+        font-size: 13vw;
+    }
+
+    .food-row {
+        gap: 1vw;
+
+        margin-top: 3vw;
+    }
+
+    .food {
+        flex-basis: 25vw;
+
+        width: 25vw;
+        height: 25vw;
+    }
+
+    .food-left {
+        margin-left: -20vw;
+    }
+
+    .food-right {
+        margin-right: -20vw;
+    }
+
+    .hero-content {
+        margin-top: 5vw;
+        margin-left: 6.3vw;
+    }
+
+    .cta {
+        width: 40vw;
+        height: 7vw;
+
+        font-size: 2.2vw;
+    }
+
+    .content-line {
+        width: 35vw;
+    }
+
+    .hero-content p {
+        font-size: 1.8vw;
+    }
 }

@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pasta Cravings</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <main class="hero">
+
+        <!-- Decorative elements -->
+        <img
+            src="{% static 'images/wiggly_top.png' %}"
+            class="wiggly wiggly-top"
+            alt=""
+        >
+
+        <img
+            src="{% static 'images/wiggly_bottom.png' %}"
+            class="wiggly wiggly-bottom"
+            alt=""
+        >
+
+        <!-- Title -->
+        <h1>Pasta Cravings</h1>
+
+        <!-- Food images -->
+        <section class="food-row">
+
+            <div class="food food-left">
+                <img
+                    src="{% static 'images/cheesy_poppers.png' %}"
+                    alt="Cheesy Poppers"
+                >
+            </div>
+
+            <div class="food">
+                <img
+                    src="{% static 'images/tuna_pesto.png' %}"
+                    alt="Tuna Pesto"
+                >
+            </div>
+
+            <div class="food">
+                <img
+                    src="{% static 'images/bolognese.png' %}"
+                    alt="Bolognese"
+                >
+            </div>
+
+            <div class="food">
+                <img
+                    src="{% static 'images/chicken_ala_king.png' %}"
+                    alt="Chicken Ala King"
+                >
+            </div>
+
+            <div class="food food-right">
+                <img
+                    src="{% static 'images/orange_chickens.png' %}"
+                    alt="Orange Chicken"
+                >
+            </div>
+
+        </section>
+
+        <!-- Call to action -->
+        <section class="hero-content">
+
+            <a href="#" class="cta">
+                SAVOR THE DELICIOUSNESS
+            </a>
+
+            <div class="content-line"></div>
+
+            <p>
+                <strong>Cravings are calling!</strong><br>
+                Come visit us and treat yourself to a plate of delicious, saucy goodness!
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
