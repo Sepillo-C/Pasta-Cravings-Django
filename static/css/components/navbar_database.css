@@ -1,58 +1,157 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700;800&display=swap');
 
 * {
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    width: 78px;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background-color: #C2312A;
+    padding: 22px 12px;
+
+    transition:
+        width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        padding 0.35s ease;
 }
 
-.sidebar {
-    width: 354px;
-    height: 1024px;
-    background-color: #C2312A;
-    padding: 30px 25px;
+/* Expand when hovered, focused, or pinned by clicking */
+.sidebar:hover,
+.sidebar:focus-within,
+.sidebar.pinned {
+    width: 280px;
 }
+
+/* BRAND */
 
 .sidebar-brand {
-    text-align: center;
-    margin-bottom: 45px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 48px;
+    margin-bottom: 22px;
+    white-space: nowrap;
+}
+
+.sidebar-logo {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.sidebar-brand-text {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+}
+
+.sidebar:hover .sidebar-brand-text,
+.sidebar:focus-within .sidebar-brand-text,
+.sidebar.pinned .sidebar-brand-text {
+    opacity: 1;
+    visibility: visible;
 }
 
 .sidebar-brand h1 {
     font-family: 'Great Vibes', cursive;
-    font-size: 75px;
+    font-size: 35px;
     font-weight: 400;
     color: white;
-    line-height: 1;
+    line-height: 1.1;
     margin: 0;
 }
 
 .sidebar-brand p {
     font-family: 'Montserrat', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 10px;
+    font-weight: 600;
     color: white;
-    margin: 10px 0 0;
+    margin: 5px 0 0;
 }
+
+/* TOGGLE BUTTON */
+
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 42px;
+    margin-bottom: 16px;
+
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* NAVIGATION */
 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
 .nav-link,
 .nav-heading {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 24px;
-    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 11px;
+
     color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    border-radius: 8px;
 }
 
-.nav-link {
-    text-decoration: none;
-    padding: 9px 10px;
+.nav-link img,
+.nav-heading img {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.nav-link span,
+.nav-heading span {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+}
+
+.sidebar:hover .nav-link span,
+.sidebar:hover .nav-heading span,
+.sidebar:focus-within .nav-link span,
+.sidebar:focus-within .nav-heading span,
+.sidebar.pinned .nav-link span,
+.sidebar.pinned .nav-heading span {
+    opacity: 1;
+    visibility: visible;
 }
 
 .nav-link:hover {
@@ -60,13 +159,13 @@ body {
     color: #BB2E27;
 }
 
-.nav-heading {
-    padding: 9px 10px;
-    margin: 0;
-}
-
 .nav-divider {
     height: 1px;
-    background-color: white;
-    margin: 15px 0;
+    flex-shrink: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 12px 2px;
+}
+
+.nav-heading {
+    margin: 0;
 }

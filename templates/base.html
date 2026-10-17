@@ -12,9 +12,13 @@
 </head>
 <body>
 
-    {% include "components/navbar.html" %}
+    <div class="page-layout">
+        {% block navbar %}
+            {% include "components/navbar.html" %}
+        {% endblock %}
 
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+    </div>
 
 </body>
 </html>

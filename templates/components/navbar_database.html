@@ -1,26 +1,80 @@
+{% load static %}
 
-<aside class="sidebar">
+<link rel="stylesheet" href="{% static 'css/components/navbar_database.css' %}">
+<script src="{% static 'js/navbar_database.js' %}" defer></script>
+
+<aside class="sidebar" id="databaseSidebar">
+
     <div class="sidebar-brand">
-        <h1>Pasta Cravings</h1>
-        <p>MANAGEMENT SYSTEM</p>
+        <img src="{% static 'images/logo.png' %}" alt="Pasta Cravings Logo" class="sidebar-logo">
+
+        <div class="sidebar-brand-text">
+            <h1>Pasta Cravings</h1>
+            <p>MANAGEMENT SYSTEM</p>
+        </div>
     </div>
 
+    <button type="button" class="sidebar-toggle"
+            id="sidebarToggle" aria-label="Toggle sidebar"
+            aria-expanded="false">
+        <span>☰</span>
+    </button>
+
     <nav class="sidebar-nav">
-        <a href="#" class="nav-link">DASHBOARD</a>
-        <a href="#" class="nav-link">POS</a>
-        <a href="#" class="nav-link">ORDERS</a>
+
+        <a href="#" class="nav-link" title="Dashboard">
+            <img src="{% static 'icons/dashboard.png' %}" alt="">
+            <span>DASHBOARD</span>
+        </a>
+
+        <a href="#" class="nav-link" title="POS">
+            <img src="{% static 'icons/pos.png' %}" alt="">
+            <span>POS</span>
+        </a>
+
+        <a href="#" class="nav-link" title="Orders">
+            <img src="{% static 'icons/orders.png' %}" alt="">
+            <span>ORDERS</span>
+        </a>
 
         <div class="nav-divider"></div>
 
-        <p class="nav-heading">RECORDS</p>
-        <a href="#" class="nav-link">TRANSACTION</a>
-        <a href="#" class="nav-link">INVENTORY</a>
-        <a href="#" class="nav-link">CUSTOMER RECORDS</a>
-        <a href="#" class="nav-link">PRODUCT RECORDS</a>
-        <a href="#" class="nav-link">EXPENSE RECORDS</a>
+        <div class="nav-heading">
+            <img src="{% static 'icons/records.png' %}" alt="">
+            <span>RECORDS</span>
+        </div>
+
+        <a href="#" class="nav-link" title="Transactions">
+            <img src="{% static 'icons/transactions.png' %}" alt="">
+            <span>TRANSACTION</span>
+        </a>
+
+        <a href="#" class="nav-link" title="Inventory">
+            <img src="{% static 'icons/inventory.png' %}" alt="">
+            <span>INVENTORY</span>
+        </a>
+
+        <a href="#" class="nav-link" title="Customer Records">
+            <img src="{% static 'icons/customer_records.png' %}" alt="">
+            <span>CUSTOMER RECORDS</span>
+        </a>
+
+        <a href="#" class="nav-link" title="Product Records">
+            <img src="{% static 'icons/product_records.png' %}" alt="">
+            <span>PRODUCT RECORDS</span>
+        </a>
+
+        <a href="#" class="nav-link" title="Expense Records">
+            <img src="{% static 'icons/expense_records.png' %}" alt="">
+            <span>EXPENSE RECORDS</span>
+        </a>
 
         <div class="nav-divider"></div>
 
-        <a href="#" class="nav-link">SETTINGS</a>
+        <a href="#" class="nav-link" title="Settings">
+            <img src="{% static 'icons/settings.png' %}" alt="">
+            <span>SETTINGS</span>
+        </a>
+
     </nav>
 </aside>

@@ -1,0 +1,144 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sales Reports | Pasta Cravings{% endblock %}
+
+{% block navbar %}
+    {% include "components/navbar_database.html" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="sales-reports-page">
+
+    <!-- DAILY SALES REPORT -->
+    <section class="report-panel" id="daily" aria-labelledby="daily-title">
+        <h1 id="daily-title">Daily Sales Report</h1>
+
+        <div class="report-row report-controls">
+            <input type="date" id="daily-date" aria-label="Report date">
+
+            <button class="report-btn solid" id="daily-generate">
+                <span>Generate</span>
+                <img src="{% static 'icons/generate.png' %}" alt="">
+            </button>
+        </div>
+
+        <div class="report-stats">
+            <div class="report-stat">
+                <span>Total Sales</span>
+                <strong id="d-sales">—</strong>
+            </div>
+
+            <div class="report-stat">
+                <span>Orders</span>
+                <strong id="d-orders">—</strong>
+            </div>
+
+            <div class="report-stat">
+                <span>Cancelled</span>
+                <strong id="d-cancel">—</strong>
+            </div>
+        </div>
+
+        <div class="report-summary">
+            <h2>Sales Summary</h2>
+
+            <div class="report-line">
+                <span>Total Gross Sales</span>
+                <span id="d-gross">—</span>
+            </div>
+
+            <div class="report-line">
+                <span>Less: Discounts</span>
+                <span id="d-disc">—</span>
+            </div>
+
+            <div class="report-line net">
+                <span>Net Sales</span>
+                <span id="d-net">—</span>
+            </div>
+        </div>
+
+        <div class="report-actions">
+            <button class="report-btn outline" id="daily-print">
+                <img src="{% static 'icons/print.png' %}" alt="">
+                <span>Print</span>
+            </button>
+
+            <button class="report-btn outline" id="daily-export">
+                <img src="{% static 'icons/export.png' %}" alt="">
+                <span>Export</span>
+            </button>
+        </div>
+    </section>
+
+
+    <!-- MONTHLY SALES REPORT -->
+    <section class="report-panel" id="monthly" aria-labelledby="monthly-title">
+        <h1 id="monthly-title">Monthly Sales Report</h1>
+
+        <div class="report-row report-controls">
+            <select id="m-month" aria-label="Month"></select>
+            <select id="m-year" aria-label="Year"></select>
+
+            <button class="report-btn solid" id="monthly-generate">
+                <span>Generate</span>
+                <img src="{% static 'icons/generate.png' %}" alt="">
+            </button>
+        </div>
+
+        <div class="report-stats">
+            <div class="report-stat">
+                <span>Total Sales</span>
+                <strong id="m-sales">—</strong>
+            </div>
+
+            <div class="report-stat">
+                <span>Total Orders</span>
+                <strong id="m-orders">—</strong>
+            </div>
+
+            <div class="report-stat">
+                <span>Total Expenses</span>
+                <strong id="m-exp">—</strong>
+            </div>
+        </div>
+
+        <div class="report-chart-title">Monthly Sales</div>
+
+        <div class="report-chart-wrap">
+            <div class="report-chart" id="m-chart"
+                 role="img" aria-label="Monthly sales bar chart">
+                <div class="report-chart-empty" id="m-empty">
+                    No data yet. Choose a month and select Generate.
+                </div>
+            </div>
+        </div>
+
+        <div class="report-actions">
+            <button class="report-btn outline" id="monthly-print">
+                <img src="{% static 'icons/print.png' %}" alt="">
+                <span>Print</span>
+            </button>
+
+            <button class="report-btn outline" id="monthly-export">
+                <img src="{% static 'icons/export.png' %}" alt="">
+                <span>Export</span>
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<script src="{% static 'js/reports.js' %}" defer></script>
+
+{% endblock %}
