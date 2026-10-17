@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - Pasta Cravings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+<main class="main">
+
+  <header class="topbar">
+    <label class="search">
+      <input type="search" placeholder="Search...">
+    </label>
+    <div class="top-actions">
+      <span>✉</span>
+      <span>🔔</span>
+      <span>Admin ▾</span>
+    </div>
+  </header>
+
+  <h1 class="page-title">DASHBOARD</h1>
+  <p class="page-date" id="date"></p>
+
+  <section class="stats">
+    <article class="card stat">
+      <p class="label">Total Gross Revenue</p>
+      <p class="value" id="revenue">???</p>
+    </article>
+    <article class="card stat">
+      <p class="label">Accepted Orders</p>
+      <p class="value" id="accepted">97%</p>
+    </article>
+    <article class="card stat">
+      <p class="label">Today's Working Hours:</p>
+      <p class="value">8AM - 8PM</p>
+    </article>
+  </section>
+
+  <section class="lower">
+    <article class="card">
+      <div class="overview-head">
+        <h2>Overview</h2>
+        <button class="range">Week ▾</button>
+      </div>
+      <div class="chart">
+        <div class="y-axis" id="yAxis"></div>
+        <div class="plot">
+          <div class="gridlines"><div class="bars" id="bars"></div></div>
+          <div class="x-axis" id="xAxis"></div>
+        </div>
+      </div>
+    </article>
+
+    <aside class="card top">
+      <h2>Top-selling</h2>
+      <ol id="topList"></ol>
+    </aside>
+  </section>
+
+</main>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>
