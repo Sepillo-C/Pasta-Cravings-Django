@@ -1,0 +1,838 @@
+/* =========================
+   GENERAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: #fffdeb;
+    color: #a71925;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    width: 100%;
+    height: 66px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 45px;
+
+    position: relative;
+    z-index: 10;
+}
+
+
+/* Logo */
+
+.navbar-logo {
+    font-family: "Brush Script MT", cursive;
+    font-size: 27px;
+    color: #a71925;
+
+    width: 180px;
+}
+
+
+/* Navigation */
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 35px;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar-links a {
+    text-decoration: none;
+
+    font-family: Georgia, serif;
+    font-size: 25px;
+    font-weight: normal;
+
+    color: #a71925;
+
+    padding: 5px 0;
+
+    position: relative;
+}
+
+.navbar-links a:hover {
+    opacity: 0.7;
+}
+
+
+/* Active menu */
+
+.navbar-links a.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-weight: 400;
+    font-size: 30px;
+    height: 1px;
+
+    background-color: #a71925;
+}
+
+
+/* Account icon */
+
+.account-icon {
+    width: 25px;
+    height: 25px;
+
+    border: 2px solid #111;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #111;
+
+    font-size: 25px;
+}
+
+
+/* =========================
+   MENU HEADING
+========================= */
+
+.menu-heading {
+    text-align: center;
+
+    padding-top: 5px;
+}
+
+.menu-heading h1 {
+    margin: 0;
+
+    font-family: "Great Vibes";
+    font-weight: 700;
+    font-size: 150px;
+    line-height: normal;
+    color: #b53238;
+}
+
+.menu-heading h2 {
+    margin: 0;
+
+    font-family: "Great Vibes";
+    font-weight: 400;
+    font-size: 128px;
+    line-height: normal;
+    color: #b53238;
+}
+
+/* =========================
+   STARTERS SECTION
+========================= */
+
+.starters-section {
+    width: 100%;
+    margin: 60px auto 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 90px;
+}
+
+.starter-row-top {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 55px;
+}
+
+.starter-row-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 55px;
+    transform: translateX(0);
+    margin-top: 10px;
+}
+
+
+/* =========================
+   STARTER CARD
+========================= */
+
+.starter-card {
+    width: 270px;
+    height: 390px;
+
+    position: relative;
+
+    border: 3px solid #b51d2a;
+
+    padding: 18px;
+
+    background-color: #fffdeb;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   IMAGE
+========================= */
+
+.starter-card img {
+    width: 100%;
+    height: 145px;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.starter-card h3 {
+    margin: 18px 0 10px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 18px;
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    color: #111;
+}
+
+.starter-card p {
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+    line-height: 1.45;
+
+    color: #333;
+
+    max-width: 270px;
+}
+
+
+/* =========================
+   PRICE CIRCLE
+========================= */
+
+.starter-card .price {
+    position: absolute;
+
+    width: 85px;
+    height: 85px;
+
+    right: -43px;
+    bottom: -40px;
+
+    border-radius: 50%;
+
+    background-color: #a71925;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* =========================
+   SECOND ROW
+========================= */
+
+.starter-card:nth-child(4) {
+    grid-column: 1;
+    justify-self: end;
+}
+
+.starter-card:nth-child(5) {
+    grid-column: 2;
+    justify-self: start;
+}
+
+
+
+/* =========================
+   PASTA SECTION - DESKTOP
+========================= */
+
+.pasta-section {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    min-height: 1050px;
+    margin: 0 auto;
+    padding: 45px 40px 70px;
+    box-sizing: border-box;
+    background: transparent;
+    overflow: visible;
+}
+
+/* Remove decorative background image */
+.red-pasta-bg {
+    display: none !important;
+}
+
+/* Heading */
+.pasta-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 0 0 30px 45px;
+    font-family: "Great Vibes", cursive;
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: #b53238;
+}
+
+/* Each item uses a three-column layout */
+.pasta-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 90px 180px 165px;
+    align-items: center;
+    column-gap: 22px;
+    width: 500px;
+    min-height: 180px;
+    margin: 0 auto 30px;
+    z-index: 1;
+}
+
+/* Pasta images */
+.pasta-item img {
+    grid-column: 2;
+    grid-row: 1;
+    width: 200px;
+    height: 230px;
+    object-fit: contain;
+    border-radius: 50%;
+    display: block;
+}
+
+/* Text */
+.pasta-info {
+    grid-column: 3;
+    grid-row: 1;
+    width: 165px;
+}
+
+.pasta-info h3 {
+    margin: 0 0 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #a71925;
+}
+
+.pasta-info p {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #a71925;
+}
+
+/* Price circles */
+.pasta-price {
+    grid-column: 1;
+    grid-row: 1;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #a71925;
+    color: #fffdeb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    position: relative;
+    z-index: 5;
+}
+
+/* =========================
+   ITEM POSITIONS
+========================= */
+
+
+/* 1. Aglio Olio: price, image, description */
+.pasta-item-1 {
+    grid-template-columns: 90px 180px 165px;
+    width: 500px;
+    margin: 0 auto 30px;
+}
+
+.pasta-item-1 .pasta-price {
+    grid-column: 1;
+}
+
+.pasta-item-1 img {
+    grid-column: 2;
+}
+
+.pasta-item-1 .pasta-info {
+    grid-column: 3;
+    text-align: left;
+}
+
+/* 2. Bolognese: description, image, price */
+.pasta-item-2 {
+    grid-template-columns: 165px 180px 90px;
+    width: 500px;
+    margin: 0 auto 30px;
+}
+
+.pasta-item-2 .pasta-info {
+    grid-column: 1;
+    text-align: right;
+}
+
+.pasta-item-2 img {
+    grid-column: 2;
+}
+
+.pasta-item-2 .pasta-price {
+    grid-column: 3;
+}
+
+/* 3. Tuna Pesto: price, image, description */
+.pasta-item-3 {
+    grid-template-columns: 90px 180px 165px;
+    width: 500px;
+    margin: 0 auto 30px;
+}
+
+.pasta-item-3 .pasta-price {
+    grid-column: 1;
+}
+
+.pasta-item-3 img {
+    grid-column: 2;
+}
+
+.pasta-item-3 .pasta-info {
+    grid-column: 3;
+    text-align: left;
+}
+
+/* 4. Creamy Truffle: description, image, price */
+.pasta-item-4 {
+    grid-template-columns: 165px 180px 90px;
+    width: 500px;
+    margin: 0 auto 30px;
+}
+
+.pasta-item-4 .pasta-info {
+    grid-column: 1;
+    text-align: right;
+}
+
+.pasta-item-4 img {
+    grid-column: 2;
+}
+
+.pasta-item-4 .pasta-price {
+    grid-column: 3;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+    .pasta-item,
+    .pasta-item-1,
+    .pasta-item-2,
+    .pasta-item-3,
+    .pasta-item-4 {
+        width: 100%;
+        max-width: 500px;
+        grid-template-columns: minmax(65px, 0.7fr)
+                               minmax(100px, 1.2fr)
+                               minmax(95px, 1fr);
+        column-gap: 8px;
+        margin: 0 auto 28px;
+    }
+
+    .pasta-item img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .pasta-info {
+        width: auto;
+    }
+
+    .pasta-info h3 {
+        font-size: 10px;
+    }
+
+    .pasta-info p {
+        font-size: 9px;
+    }
+
+    .pasta-price {
+        width: 48px;
+        height: 48px;
+        font-size: 12px;
+    }
+
+    .pasta-item-2,
+    .pasta-item-4 {
+        grid-template-columns: minmax(95px, 1fr)
+                               minmax(100px, 1.2fr)
+                               minmax(55px, 0.7fr);
+    }
+}
+
+
+/* =========================
+   RICE BOWLS SECTION
+========================= */
+
+.rice-section {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 900px;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    background: #fffdeb;
+    overflow: hidden;
+}
+
+/* Heading */
+.rice-title {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    margin: 0;
+    font-family: "Great Vibes", cursive;
+    font-size: 58px;
+    font-weight: 400;
+    line-height: 1.1;
+    color: #a71925;
+}
+
+/* Item layout */
+.rice-item {
+    position: absolute;
+    width: 190px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Image and price */
+.rice-image-wrap {
+    position: relative;
+    width: 174px;
+    height: 174px;
+    margin-bottom: 14px;
+}
+
+.rice-image-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 2px solid #a71925;
+    border-radius: 50%;
+    padding: 5px;
+    background: #fffdeb;
+}
+
+/* Price circle */
+.rice-price {
+    position: absolute;
+    right: -58px;
+    bottom: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #a71925;
+    color: #fffdeb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 5;
+}
+
+/* Text */
+.rice-info {
+    width: 100%;
+}
+
+.rice-info h3 {
+    margin: 0 0 8px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #a71925;
+}
+
+.rice-info p {
+    max-width: 165px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    line-height: 1.3;
+    color: #a71925;
+}
+
+/* =========================
+   ALTERNATING POSITIONS
+========================= */
+
+/* Left - Hungarian Sausage */
+.rice-item-1 {
+    top: 65px;
+    left: 16%;
+}
+
+/* Right - Chicken Ala King */
+.rice-item-2 {
+    top: 195px;
+    left: 57%;
+}
+
+/* Left - Cheesy Poppers */
+.rice-item-3 {
+    top: 290px;
+    left: 2%;
+}
+
+/* Right - Orange Chicken */
+.rice-item-4 {
+    top: 410px;
+    left: 56%;
+}
+
+/* Left - Lechon Kawali */
+.rice-item-5 {
+    top: 535px;
+    left: 13%;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+    .rice-section {
+        height: 900px;
+    }
+
+    .rice-title {
+        font-size: 42px;
+        right: 12px;
+    }
+
+    .rice-item {
+        width: 150px;
+    }
+
+    .rice-image-wrap {
+        width: 100px;
+        height: 100px;
+    }
+
+    .rice-price {
+        width: 48px;
+        height: 48px;
+        right: -35px;
+        font-size: 12px;
+    }
+
+    .rice-info h3 {
+        font-size: 10px;
+    }
+
+    .rice-info p {
+        font-size: 9px;
+    }
+
+    .rice-item-1 {
+        left: 10%;
+    }
+
+    .rice-item-2 {
+        left: auto;
+        right: 5%;
+    }
+
+    .rice-item-3 {
+        left: 0;
+    }
+
+    .rice-item-4 {
+        left: auto;
+        right: 5%;
+    }
+
+    .rice-item-5 {
+        left: 10%;
+    }
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer {
+    position: relative;
+    width: 100%;
+    height: 105px;
+    background-color: #a52b30;
+    overflow: hidden;
+    margin: 0;
+    color: #fffdeb;
+    font-family: Arial, sans-serif;
+}
+
+/* Decorative waves above footer */
+.footer-wiggles {
+    position: absolute;
+    inset: -95px 0 auto 0;
+    height: 100px;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.footer-wiggles img {
+    position: absolute;
+    top: 0;
+    width: 220px;
+    height: 100px;
+    object-fit: cover;
+    object-position: bottom;
+}
+
+/* Left decorative wave */
+.wiggle-left {
+    left: 0;
+}
+
+/* Right decorative wave */
+.wiggle-right {
+    right: 0;
+    transform: scaleX(-1);
+}
+
+/* Footer contents */
+.footer-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    padding: 0 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Script logo */
+.footer-logo {
+    flex-shrink: 0;
+    font-family: "Great Vibes", cursive;
+    font-size: 32px;
+    font-weight: 400;
+    color: #fffdeb;
+    white-space: nowrap;
+}
+
+/* FOOTER ICON IMAGES */
+
+.footer-social {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 24px;
+}
+
+.footer-contact {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fffdeb;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.footer-contact img.footer-icon {
+    display: block;
+    width: 17px;
+    height: 17px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.footer-phone span {
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+@media (max-width: 700px) {
+    .footer-social {
+        gap: 10px;
+    }
+
+    .footer-contact {
+        gap: 3px;
+        font-size: 7px;
+    }
+
+    .footer-contact img.footer-icon {
+        width: 13px;
+        height: 13px;
+    }
+
+    .footer-phone span {
+        font-size: 7px;
+    }
+}
