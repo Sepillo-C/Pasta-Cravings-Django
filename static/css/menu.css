@@ -14,113 +14,12 @@ body {
 
 
 /* =========================
-   NAVBAR
-========================= */
-
-.navbar {
-    width: 100%;
-    height: 66px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding: 0 45px;
-
-    position: relative;
-    z-index: 10;
-}
-
-
-/* Logo */
-
-.navbar-logo {
-    font-family: "Brush Script MT", cursive;
-    font-size: 27px;
-    color: #a71925;
-
-    width: 180px;
-}
-
-
-/* Navigation */
-
-.navbar-links {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 35px;
-
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.navbar-links a {
-    text-decoration: none;
-
-    font-family: Georgia, serif;
-    font-size: 25px;
-    font-weight: normal;
-
-    color: #a71925;
-
-    padding: 5px 0;
-
-    position: relative;
-}
-
-.navbar-links a:hover {
-    opacity: 0.7;
-}
-
-
-/* Active menu */
-
-.navbar-links a.active::after {
-    content: "";
-
-    position: absolute;
-
-    left: 0;
-    right: 0;
-    bottom: 0;
-    font-weight: 400;
-    font-size: 30px;
-    height: 1px;
-
-    background-color: #a71925;
-}
-
-
-/* Account icon */
-
-.account-icon {
-    width: 25px;
-    height: 25px;
-
-    border: 2px solid #111;
-    border-radius: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: #111;
-
-    font-size: 25px;
-}
-
-
-/* =========================
    MENU HEADING
 ========================= */
 
 .menu-heading {
     text-align: center;
-
-    padding-top: 5px;
+    padding-top: 90px;
 }
 
 .menu-heading h1 {
@@ -263,8 +162,9 @@ body {
     align-items: center;
     justify-content: center;
 
-    font-size: 20px;
-    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    font-size: 25px;
+    font-weight: 800;
 }
 
 /* =========================
@@ -377,9 +277,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    font-size: 25px;
+    font-weight: 800;
     position: relative;
     z-index: 5;
 }
@@ -582,19 +482,19 @@ body {
 /* Price circle */
 .rice-price {
     position: absolute;
-    right: -58px;
+    right: -80px;
     bottom: 0;
-    width: 58px;
-    height: 58px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     background: #a71925;
     color: #fffdeb;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-    font-weight: bold;
+    font-family: "Montserrat", sans-serif;
+    font-size: 25px;
+    font-weight: 800;
     z-index: 5;
 }
 
@@ -713,126 +613,5 @@ body {
 
     .rice-item-5 {
         left: 10%;
-    }
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-.site-footer {
-    position: relative;
-    width: 100%;
-    height: 105px;
-    background-color: #a52b30;
-    overflow: hidden;
-    margin: 0;
-    color: #fffdeb;
-    font-family: Arial, sans-serif;
-}
-
-/* Decorative waves above footer */
-.footer-wiggles {
-    position: absolute;
-    inset: -95px 0 auto 0;
-    height: 100px;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.footer-wiggles img {
-    position: absolute;
-    top: 0;
-    width: 220px;
-    height: 100px;
-    object-fit: cover;
-    object-position: bottom;
-}
-
-/* Left decorative wave */
-.wiggle-left {
-    left: 0;
-}
-
-/* Right decorative wave */
-.wiggle-right {
-    right: 0;
-    transform: scaleX(-1);
-}
-
-/* Footer contents */
-.footer-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    padding: 0 45px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-/* Script logo */
-.footer-logo {
-    flex-shrink: 0;
-    font-family: "Great Vibes", cursive;
-    font-size: 32px;
-    font-weight: 400;
-    color: #fffdeb;
-    white-space: nowrap;
-}
-
-/* FOOTER ICON IMAGES */
-
-.footer-social {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 24px;
-}
-
-.footer-contact {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #fffdeb;
-    font-family: Arial, sans-serif;
-    font-size: 9px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-.footer-contact img.footer-icon {
-    display: block;
-    width: 17px;
-    height: 17px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.footer-phone span {
-    font-size: 9px;
-    line-height: 1.4;
-}
-
-@media (max-width: 700px) {
-    .footer-social {
-        gap: 10px;
-    }
-
-    .footer-contact {
-        gap: 3px;
-        font-size: 7px;
-    }
-
-    .footer-contact img.footer-icon {
-        width: 13px;
-        height: 13px;
-    }
-
-    .footer-phone span {
-        font-size: 7px;
     }
 }

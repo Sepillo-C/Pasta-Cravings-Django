@@ -1,37 +1,13 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Pasta Cravings | Menu{% endblock %}
 
-    <title>Pasta Cravings | Menu</title>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/menu.css' %}">
+{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/menu.css' %}">
-</head>
-
-<body>
-
-  <!-- NAVBAR -->
-    <header class="navbar">
-
-        <div class="navbar-logo">
-            Pasta Cravings
-        </div>
-
-        <nav class="navbar-links">
-            <a href="#">Home</a>
-            <a href="#" class="active">Menu</a>
-            <a href="#">Contacts</a>
-        </nav>
-
-        <div class="account-icon">
-            <span>●</span>
-        </div>
-
-    </header>
-
+{% block content %}
 
     <!-- MENU HEADER -->
     <section class="menu-heading">
@@ -334,63 +310,4 @@
         </div>
     </div>
 </section>
-
-<footer class="site-footer">
-    <div class="footer-wiggles">
-        <img
-            src="{% static 'images/wiggly_bottom.png' %}"
-            alt=""
-            class="wiggle-left"
-        >
-
-        <img
-            src="{% static 'images/wiggly_bottom.png' %}"
-            alt=""
-            class="wiggle-right"
-        >
-    </div>
-
-    <div class="footer-content">
-
-        <div class="footer-logo">
-            Pasta Cravings
-        </div>
-
-        <div class="footer-social">
-
-            <!-- Instagram -->
-            <div class="footer-contact">
-                <img
-                    src="{% static 'images/instagram.png' %}"
-                    alt="Instagram"
-                    class="footer-icon"
-                >
-                <span>@PASTACRAVINGS</span>
-            </div>
-
-            <!-- Messenger -->
-            <div class="footer-contact">
-                <img
-                    src="{% static 'images/messenger.png' %}"
-                    alt="Messenger"
-                    class="footer-icon"
-                >
-                <span>PASTA CRAVINGS</span>
-            </div>
-
-            <!-- Viber -->
-            <div class="footer-contact footer-phone">
-                <img
-                    src="{% static 'images/viber.png' %}"
-                    alt="Viber"
-                    class="footer-icon"
-                >
-                <span>
-                    0995 332 8505<br>
-                    0945 992 7194
-                </span>
-            </div>
-
-        </div>
-    </div>
-</footer>
+{% endblock %}
