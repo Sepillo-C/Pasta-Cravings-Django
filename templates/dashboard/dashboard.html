@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard - Pasta Cravings{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block navbar %}
+    {% include "components/navbar_database.html" %}
+{% endblock %}
+
+{% block content %}
+
+<main class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+        <label class="search">
+            <img src="{% static 'icons/search.png' %}" alt="" class="icon search-icon">
+            <input type="search" placeholder="Search...">
+        </label>
+
+        <div class="top-actions">
+
+            <button class="icon-button" type="button" aria-label="Messages">
+                <img src="{% static 'icons/mail.png' %}" alt="">
+            </button>
+
+            <button class="icon-button" type="button" aria-label="Notifications">
+                <img src="{% static 'icons/notification.png' %}" alt="">
+            </button>
+
+            <button class="profile-button" type="button">
+                <img src="{% static 'icons/profile.png' %}" alt="">
+                <span>Admin</span>
+                <img
+                    src="{% static 'icons/arrow_drop_down_profile.png' %}"
+                    alt=""
+                    class="dropdown-icon"
+                >
+            </button>
+
+        </div>
+    </header>
+
+    <!-- PAGE HEADING -->
+    <section class="page-heading">
+        <h1 class="page-title">DASHBOARD</h1>
+
+        <p class="page-date">
+            <img
+                src="{% static 'icons/calendar.png' %}"
+                alt=""
+                class="calendar-icon"
+            >
+            <span id="date"></span>
+            | Lucena City
+        </p>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="stats">
+
+        <article class="card stat">
+            <p class="label">Total Gross Revenue</p>
+            <p class="value" id="revenue">₱0.00</p>
+        </article>
+
+        <article class="card stat">
+            <p class="label">Accepted Orders</p>
+            <p class="value" id="accepted">97%</p>
+        </article>
+
+        <article class="card stat">
+            <p class="label">Today's Working Hours:</p>
+            <p class="value">8AM - 8PM</p>
+        </article>
+
+    </section>
+
+    <!-- OVERVIEW AND TOP-SELLING -->
+    <section class="lower">
+
+        <!-- OVERVIEW CHART -->
+        <article class="card overview-card">
+
+            <div class="overview-head">
+                <h2>Overview</h2>
+
+                <button class="range" type="button">
+                    <img
+                        src="{% static 'icons/calendar.png' %}"
+                        alt=""
+                    >
+                    <span>Week</span>
+                    <img
+                        src="{% static 'icons/arrow_drop_down_date.png' %}"
+                        alt=""
+                        class="range-arrow"
+                    >
+                </button>
+            </div>
+
+            <div class="chart">
+
+                <div class="y-axis" id="yAxis"></div>
+
+                <div class="plot">
+                    <div class="gridlines">
+                        <div class="bars" id="bars"></div>
+                    </div>
+
+                    <div class="x-axis" id="xAxis"></div>
+                </div>
+
+            </div>
+
+        </article>
+
+        <!-- TOP-SELLING PRODUCTS -->
+        <aside class="card top">
+            <h2>Top-selling</h2>
+            <ol id="topList"></ol>
+        </aside>
+
+    </section>
+
+</main>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}

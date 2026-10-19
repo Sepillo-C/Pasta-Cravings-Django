@@ -22,7 +22,7 @@
 
     <nav class="sidebar-nav">
 
-        <a href="#" class="nav-link" title="Dashboard">
+        <a href="{% url 'dashboard' %}" class="nav-link" title="Dashboard">
             <img src="{% static 'icons/dashboard.png' %}" alt="">
             <span>DASHBOARD</span>
         </a>
@@ -39,10 +39,10 @@
 
         <div class="nav-divider"></div>
 
-        <div class="nav-heading">
-            <img src="{% static 'icons/records.png' %}" alt="">
-            <span>RECORDS</span>
-        </div>
+        <a href="{% url 'reports' %}" class="nav-link" title="Reports">
+            <img src="{% static 'icons/reports.png' %}" alt="">
+            <span>REPORTS</span>
+        </a>
 
         <a href="#" class="nav-link" title="Transactions">
             <img src="{% static 'icons/transactions.png' %}" alt="">
@@ -55,12 +55,12 @@
         </a>
 
         <a href="#" class="nav-link" title="Customer Records">
-            <img src="{% static 'icons/customer_records.png' %}" alt="">
+            <img src="{% static 'icons/customer_records.png' %}" alt=""> 
             <span>CUSTOMER RECORDS</span>
         </a>
 
         <a href="#" class="nav-link" title="Product Records">
-            <img src="{% static 'icons/product_records.png' %}" alt="">
+            <img src="{% static 'icons/product_records.png' %}" alt=""> 
             <span>PRODUCT RECORDS</span>
         </a>
 
