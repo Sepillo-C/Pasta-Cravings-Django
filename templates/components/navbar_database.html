@@ -54,8 +54,8 @@
             <span>INVENTORY</span>
         </a>
 
-        <a href="#" class="nav-link" title="Customer Records">
-            <img src="{% static 'icons/customer_records.png' %}" alt=""> 
+        <a href="{% url 'customer' %}" class="nav-link" title="Customer Records">
+            <img src="{% static 'icons/customer_records.png' %}" alt="">
             <span>CUSTOMER RECORDS</span>
         </a>
 
@@ -77,4 +77,15 @@
         </a>
 
     </nav>
+
+        <!-- LOG OUT -->
+    <form method="POST" action="{% url 'logout' %}" class="sidebar-logout">
+        {% csrf_token %}
+
+        <button type="submit" class="nav-link logout-button" title="Log Out">
+            <img src="{% static 'icons/log_out.png' %}" alt="">
+            <span>LOG OUT</span>
+        </button>
+    </form>
+
 </aside>
