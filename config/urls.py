@@ -8,4 +8,5 @@ urlpatterns = [
     path("reports/", include("apps.reports.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
     path("customers/", include("apps.customers.urls")),
+    path('settings/', include('apps.system_settings.urls')),
 ]
