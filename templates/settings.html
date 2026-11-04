@@ -1,0 +1,318 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block navbar %}
+    {% include "components/navbar_database.html" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/settings.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="settings-layout">
+
+    
+
+    <!-- RIGHT CONTENT -->
+    <main class="settings-main">
+
+        <div class="settings-container">
+
+            <h1>System Settings</h1>
+
+            <div class="settings-tabs">
+                <button class="tab-button active"
+                        onclick="showTab('company', this)">
+                    Company Profile
+                </button>
+
+                <button class="tab-button"
+                        onclick="showTab('staff', this)">
+                    Staff Management
+                </button>
+
+                <button class="tab-button"
+                        onclick="showTab('security', this)">
+                    Security &amp; Preference
+                </button>
+            </div>
+
+            <!-- COMPANY PROFILE -->
+            <div class="tab-content active" id="company">
+
+                <form class="company-form" onsubmit="saveSettings(event)">
+
+                    <div class="company-grid">
+
+                        <!-- LEFT COLUMN -->
+                        <div class="form-column">
+
+                            <div class="form-group">
+                                <label for="companyName">Company name</label>
+                                <input type="text" id="companyName"
+                                       value="Pasta Cravings">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Logo</label>
+
+                                <label class="logo-upload" for="companyLogo">
+                                    <span>Upload company logo</span>
+                                    <small>PNG, JPG or SVG (Max. 5MB)</small>
+                                    <input type="file" id="companyLogo"
+                                           accept=".png,.jpg,.jpeg,.svg">
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="companyAddress">Address</label>
+                                <input type="text" id="companyAddress"
+                                       placeholder="Enter business address">
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT COLUMN -->
+                        <div class="form-column">
+
+                            <div class="form-group">
+                                <label for="contactDetails">Contact details</label>
+                                <input type="text" id="contactDetails"
+                                       placeholder="Enter contact details">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="businessHours">Business hours</label>
+                                <input type="text" id="businessHours"
+                                       value="12:00 PM - 8:00 PM">
+                            </div>
+
+                            <div class="form-group social-group">
+                                <label for="facebook">Social Media</label>
+                                <input type="url" id="facebook"
+                                       placeholder="Facebook">
+
+                                <input type="url" id="instagram"
+                                       placeholder="Instagram">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset" class="reset-button">Reset</button>
+                        <button type="submit" class="save-button">Save Changes</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- STAFF MANAGEMENT -->
+      <div class="tab-content" id="staff">
+
+          <div class="staff-panel">
+
+              <div class="staff-toolbar">
+                  <div class="staff-search">
+                      <span class="search-icon">⌕</span>
+                      <input type="text" id="staffSearch" placeholder="Search by staff ID">
+                  </div>
+
+                  <button type="button" class="add-staff-button">
+                      <span>＋</span>
+                      Add Staff
+                  </button>
+              </div>
+
+              <div class="staff-table-wrapper">
+                  <table class="staff-table">
+                      <thead>
+                          <tr>
+                              <th>ID</th>
+                              <th>Name</th>
+                              <th>Role</th>
+                              <th>Status</th>
+                              <th>Action</th>
+                          </tr>
+                      </thead>
+
+                      <tbody id="staffTableBody">
+                          <tr>
+                              <td>S01</td>
+                              <td>Jennie Min</td>
+                              <td>Admin</td>
+                              <td><span class="status-badge admin-status">Admin</span></td>
+                              <td class="staff-actions">
+                                  <button type="button" class="permission-button">Edit Permissions</button>
+                                  <button type="button" class="edit-staff-button">Edit</button>
+                              </td>
+                          </tr>
+
+                          <tr>
+                              <td>S02</td>
+                              <td>Rowena Low</td>
+                              <td>Cashier</td>
+                              <td><span class="status-badge pending-status">Pending</span></td>
+                              <td class="staff-actions">
+                                  <button type="button" class="permission-button">Edit Permissions</button>
+                                  <button type="button" class="edit-staff-button">Edit</button>
+                              </td>
+                          </tr>
+
+                          <tr>
+                              <td>S03</td>
+                              <td>Julian Cruz</td>
+                              <td>Cashier</td>
+                              <td><span class="status-badge pending-status">Pending</span></td>
+                              <td class="staff-actions">
+                                  <button type="button" class="permission-button">Edit Permissions</button>
+                                  <button type="button" class="edit-staff-button">Edit</button>
+                              </td>
+                          </tr>
+
+                          <tr>
+                              <td>S04</td>
+                              <td>Cheesy Kimona</td>
+                              <td>Admin</td>
+                              <td><span class="status-badge admin-status">Admin</span></td>
+                              <td class="staff-actions">
+                                  <button type="button" class="permission-button">Edit Permissions</button>
+                                  <button type="button" class="edit-staff-button">Edit</button>
+                              </td>
+                          </tr>
+
+                          <tr>
+                              <td>S05</td>
+                              <td>Howard Truffle</td>
+                              <td>Admin</td>
+                              <td><span class="status-badge admin-status">Admin</span></td>
+                              <td class="staff-actions">
+                                  <button type="button" class="permission-button">Edit Permissions</button>
+                                  <button type="button" class="edit-staff-button">Edit</button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+          </div>
+      </div>
+
+            
+<!-- SECURITY & PREFERENCE -->
+<div class="tab-content" id="security">
+
+    <div class="security-panel">
+
+        <!-- PASSWORD FIELDS -->
+        <div class="password-grid">
+
+            <div class="security-form-group">
+                <label for="newPassword">Change Password</label>
+                <input type="password" id="newPassword" placeholder="Enter new password">
+            </div>
+
+            <div class="security-form-group">
+                <label for="confirmPassword">Confirm New Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm new password">
+            </div>
+
+        </div>
+
+        <!-- MULTI-FACTOR AUTHENTICATION -->
+        <div class="security-option">
+
+            <div class="security-option-icon">🔒</div>
+
+            <div class="security-option-text">
+                <strong>Multi-Factor Authentication</strong>
+                <p>Change your multi-factor screen when someone change your password.</p>
+            </div>
+
+            <label class="switch">
+                <input type="checkbox" id="mfaToggle" checked>
+                <span class="slider"></span>
+            </label>
+
+        </div>
+
+        <!-- NOTIFICATION PREFERENCES -->
+        <div class="security-option">
+
+            <div class="security-option-icon">🛡</div>
+
+            <div class="security-option-text">
+                <strong>Notification Preferences</strong>
+                <p>Change notification and reminders for your notifications.</p>
+            </div>
+
+            <label class="switch">
+                <input type="checkbox" id="notificationToggle" checked>
+                <span class="slider"></span>
+            </label>
+
+        </div>
+
+        <!-- LOGIN ACTIVITY -->
+        <button type="button" class="security-option login-activity"
+                onclick="showLoginActivity()">
+
+            <div class="security-option-icon">◷</div>
+
+            <div class="security-option-text">
+                <strong>Login Activity</strong>
+                <p>View recent login attempts, including date, time, and device.</p>
+            </div>
+
+            <span class="security-arrow">›</span>
+
+        </button>
+
+        <!-- SAVE BUTTON -->
+        <div class="security-actions">
+            <button type="button" class="security-save-button"
+                    onclick="saveSecuritySettings()">
+                Save Changes
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
+        </div>
+
+        
+    </main>
+    
+
+</div>
+
+<script>
+    function showTab(tabId, button) {
+        document.querySelectorAll(".tab-content").forEach(tab => {
+            tab.classList.remove("active");
+        });
+
+        document.querySelectorAll(".tab-button").forEach(tab => {
+            tab.classList.remove("active");
+        });
+
+        document.getElementById(tabId).classList.add("active");
+        button.classList.add("active");
+    }
+
+    function saveSettings(event) {
+        event.preventDefault();
+        alert("Settings form is ready. Database saving still needs to be connected.");
+    }
+
+      
+    
+</script>
+{% endblock %}
