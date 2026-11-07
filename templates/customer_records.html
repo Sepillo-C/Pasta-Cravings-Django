@@ -2,12 +2,11 @@
 {% load static %}
 
 {% block title %}Customer Records | Pasta Cravings{% endblock %}
+
 {% block footer %}{% endblock %}
 
 {% block extra_css %}
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/customer_records.css' %}">
 {% endblock %}
 
@@ -17,185 +16,105 @@
 
 {% block content %}
 
-<div class="app">
+<main class="app">
 
-    <main id="customer-records">
-        <section class="records-panel" aria-labelledby="page-title">
+    <section id="customer-records" class="records-panel">
 
-            <h1 id="page-title">Customer Records</h1>
+        <h1>CUSTOMER RECORDS</h1>
 
-            <div class="toolbar">
+        <div class="toolbar">
 
-                <label class="search-box">
-                    <img
-                        src="{% static 'icons/search.png' %}"
-                        alt=""
-                        class="search-icon"
-                    >
+            <label class="search-box">
+                <img src="{% static 'icons/search.png' %}" alt="" class="search-icon">
+                <input type="search" id="customerSearch" placeholder="Search customers...">
+            </label>
 
-                    <input
-                        type="search"
-                        id="customerSearch"
-                        placeholder="Search by ID"
-                        aria-label="Search customers by ID"
-                    >
-                </label>
+            <button type="button" id="openAddModalBtn" class="save-button">
+                Add Customer
+            </button>
 
-                <button class="add-button" id="openAddModalBtn" type="button">
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        aria-hidden="true"
-                    >
-                        <path d="M12 3v18M3 12h18"></path>
-                    </svg>
+        </div>
 
-                    <span>Add Customer</span>
-                </button>
+        <div class="table-container">
+            <div class="table-scroll">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Customer Name</th>
+                            <th>Total Orders</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="customerTable">
+
+                        {% for cust in customers %}
+                        <tr class="customer-row">
+                            <td data-search-id="{{ cust.id }}">C0{{ cust.id }}</td>
+                            <td>{{ cust.name }}</td>
+                            <td>{{ cust.orders }}</td>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="edit-modal-btn"
+                                    data-id="{{ cust.id }}"
+                                    data-name="{{ cust.name }}"
+                                    data-orders="{{ cust.orders }}"
+                                >
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="empty-message">
+                                Wala pang nakarehistrong customer.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        <tr id="noSearchResults" style="display: none;">
+                            <td colspan="4" class="empty-message">
+                                No matching customer found.
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
 
             </div>
+        </div>
 
-            <div class="table-container">
-                <div class="table-scroll">
+    </section>
 
-                    <table aria-label="Customer records">
+</main>
 
-                        <colgroup>
-                            <col style="width: 12%">
-                            <col style="width: 33%">
-                            <col style="width: 23.5%">
-                            <col style="width: 14.5%">
-                            <col style="width: 17%">
-                        </colgroup>
-
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Contact</th>
-                                <th scope="col">Orders</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="customerTableBody">
-
-                            {% for cust in customers %}
-                            <tr class="customer-row">
-
-                                <td data-search-id="{{ cust.id }}">
-                                    C0{{ cust.id }}
-                                </td>
-
-                                <td>{{ cust.name }}</td>
-
-                                <td>{{ cust.contact }}</td>
-
-                                <td>{{ cust.orders }}</td>
-
-                                <td>
-                                    <button
-                                        type="button"
-                                        class="edit-modal-btn"
-                                        data-id="{{ cust.id }}"
-                                        data-name="{{ cust.name }}"
-                                        data-contact="{{ cust.contact }}"
-                                        data-orders="{{ cust.orders }}"
-                                    >
-                                        Edit
-                                    </button>
-                                </td>
-
-                            </tr>
-
-                            {% empty %}
-                            <tr class="empty-row">
-                                <td colspan="5" class="empty-message">
-                                    No customers registered yet.
-                                </td>
-                            </tr>
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
-
-                    <p id="noSearchResults" style="display: none; text-align: center; padding: 20px;">
-                        No matching customers found.
-                    </p>
-
-                </div>
-            </div>
-
-        </section>
-    </main>
-
-</div>
-
-
-<!-- =========================
-     ADD CUSTOMER MODAL
-========================= -->
-
-<div
-    id="addCustomerModal"
-    class="customer-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="addModalTitle"
-    style="display: none;"
->
+<!-- ADD CUSTOMER MODAL -->
+<div class="customer-modal" id="addCustomerModal">
     <div class="customer-modal-content">
 
-        <h2 id="addModalTitle">Add New Customer</h2>
+        <h2>Add Customer</h2>
 
         <form method="POST" action="{% url 'add_customer' %}">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="addNameInput">Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    id="addNameInput"
-                    required
-                >
+                <label for="add-name">CUSTOMER NAME</label>
+                <input type="text" id="add-name" name="name" required>
             </div>
 
             <div class="form-group">
-                <label for="addContactInput">Contact:</label>
-                <input
-                    type="text"
-                    name="contact"
-                    id="addContactInput"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="addOrdersInput">Orders:</label>
-                <input
-                    type="number"
-                    name="orders"
-                    id="addOrdersInput"
-                    min="0"
-                    value="0"
-                    required
-                >
+                <label for="add-orders">TOTAL ORDERS</label>
+                <input type="number" id="add-orders" name="orders" value="0" min="0" required>
             </div>
 
             <div class="modal-actions">
-                <button
-                    type="button"
-                    id="closeModalBtn"
-                    class="cancel-button"
-                >
+                <button type="button" id="closeModalBtn" class="cancel-button">
                     Cancel
                 </button>
-
                 <button type="submit" class="save-button">
                     Save Customer
                 </button>
@@ -206,70 +125,29 @@
     </div>
 </div>
 
-
-<!-- =========================
-     EDIT CUSTOMER MODAL
-========================= -->
-
-<div
-    id="editCustomerModal"
-    class="customer-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="editModalTitle"
-    style="display: none;"
->
+<!-- EDIT CUSTOMER MODAL -->
+<div class="customer-modal" id="editCustomerModal">
     <div class="customer-modal-content">
 
-        <h2 id="editModalTitle">Edit Customer</h2>
+        <h2>Edit Customer</h2>
 
-        <form
-            id="editCustomerForm"
-            method="POST"
-            action=""
-        >
+        <form method="POST" id="editCustomerForm">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="editNameInput">Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    id="editNameInput"
-                    required
-                >
+                <label for="editNameInput">CUSTOMER NAME</label>
+                <input type="text" id="editNameInput" name="name" required>
             </div>
 
             <div class="form-group">
-                <label for="editContactInput">Contact:</label>
-                <input
-                    type="text"
-                    name="contact"
-                    id="editContactInput"
-                    required
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="editOrdersInput">Orders:</label>
-                <input
-                    type="number"
-                    name="orders"
-                    id="editOrdersInput"
-                    min="0"
-                    required
-                >
+                <label for="editOrdersInput">TOTAL ORDERS</label>
+                <input type="number" id="editOrdersInput" name="orders" min="0" required>
             </div>
 
             <div class="modal-actions">
-                <button
-                    type="button"
-                    id="closeEditModalBtn"
-                    class="cancel-button"
-                >
+                <button type="button" id="closeEditModalBtn" class="cancel-button">
                     Cancel
                 </button>
-
                 <button type="submit" class="save-button">
                     Update Customer
                 </button>
@@ -280,7 +158,6 @@
     </div>
 </div>
 
-
-<script src="{% static 'js/customer_records.js' %}" defer></script>
+<script src="{% static 'js/customer_records.js' %}"></script>
 
 {% endblock %}

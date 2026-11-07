@@ -5,11 +5,6 @@ from .forms import CustomerForm
 
 
 @login_required
-def customer_records_view(request):
-    return render(request, "customer_records.html")
-
-
-@login_required
 def customer_view(request):
     customers_list = Customer.objects.all()
 
@@ -28,6 +23,14 @@ def add_customer_view(request):
 
         if form.is_valid():
             form.save()
+            return redirect("customer")
+
+        customers_list = Customer.objects.all()
+
+        return render(request, "customer_records.html", {
+            "customers": customers_list,
+            "form": form,
+        })
 
     return redirect("customer")
 

@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const editForm = document.getElementById("editCustomerForm");
 
     const editNameInput = document.getElementById("editNameInput");
-    const editContactInput = document.getElementById("editContactInput");
     const editOrdersInput = document.getElementById("editOrdersInput");
 
     const searchInput = document.getElementById("customerSearch");
@@ -36,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const id = this.dataset.id;
 
             editNameInput.value = this.dataset.name || "";
-            editContactInput.value = this.dataset.contact || "";
             editOrdersInput.value = this.dataset.orders || "0";
 
             editForm.action = `/customers/edit/${id}/`;

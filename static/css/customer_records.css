@@ -127,15 +127,6 @@ body:has(#databaseSidebar.pinned) .app {
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.add-button svg,
-.add-button img {
-    width: 20px;
-    height: 20px;
-    max-width: 20px;
-    flex-shrink: 0;
-    object-fit: contain;
-}
-
 .add-button:hover {
     background: #852323;
     border-color: #852323;
@@ -273,8 +264,7 @@ body:has(#databaseSidebar.pinned) .app {
     border: 1.5px solid #DDD6D0;
     border-radius: 10px;
     outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease,
-                background 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .form-group input:hover {
@@ -302,8 +292,7 @@ body:has(#databaseSidebar.pinned) .app {
     border-radius: 10px;
     font: 600 13px "Montserrat", sans-serif;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease,
-                box-shadow 0.2s ease;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cancel-button {
