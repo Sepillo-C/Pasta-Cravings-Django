@@ -1,0 +1,221 @@
+.page {
+  --bg: #FBF9E4;
+  --others: #A02E2F;
+  --title: #B53238;
+  --text: #000;
+  --text-inv: #fff;
+  --font-title: "Great Vibes", cursive;
+  --font-nav: "Playfair Display", serif;
+  --font-main: "Montserrat", system-ui, sans-serif;
+  --shadow: 0 2px 6px rgba(0, 0, 0, .13);
+
+  /* Sidebar widths (must match .sidebar in your navbar CSS) */
+  --sidebar-w: 78px;
+  --sidebar-w-open: 280px;
+
+  min-height: 100vh;
+  padding: 30px 26px 30px calc(var(--sidebar-w) + 17px);
+  /* same timing as the sidebar's width transition so they move together */
+  transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .58fr);
+  gap: 16px;
+  align-items: stretch;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-weight: 400;
+}
+
+/* Shift the page when the sidebar expands (hover, keyboard focus, or pinned) */
+body:has(.sidebar:hover) .page,
+body:has(.sidebar:focus-within) .page,
+body:has(.sidebar.pinned) .page {
+  padding-left: calc(var(--sidebar-w-open) + 17px);
+}
+
+.page, .page * { box-sizing: border-box; }
+
+.page .panel {
+  background: var(--text-inv);
+  border: 2px solid var(--others);
+}
+
+/* ---------- Menu panel ---------- */
+.page .menu-panel { padding: 28px 22px 24px; }
+
+.page .search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  background: #f1f1f1;
+  border-radius: 8px;
+  color: var(--others);
+}
+.page .search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: 400 11px var(--font-main);
+  color: var(--text);
+}
+.page .search input::placeholder { color: #aaa; }
+
+.page .chips { display: flex; gap: 6px; margin-top: 22px; }
+.page .chip {
+  width: 70px;
+  height: 20px;
+  padding: 0;
+  font: 600 10px var(--font-main);
+  color: var(--text);
+  background: var(--text-inv);
+  border: 1px solid #777;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.page .chip.active {
+  color: var(--text-inv);
+  background: var(--others);
+  border-color: var(--others);
+}
+
+/* ---------- Menu cards ---------- */
+.page .menu-grid {
+  margin-top: 28px;
+  padding: 0 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 10px;
+  row-gap: 14px;
+}
+.page .card {
+  margin-top: 36px;
+  padding: 0 6px 12px;
+  text-align: center;
+  background: var(--text-inv);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+.page .card img {
+  display: block;
+  width: 68px;
+  height: 68px;
+  margin: -34px auto 8px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.page .card h3 {
+  margin: 0 0 8px;
+  font: 600 8px var(--font-main);
+  text-transform: uppercase;
+  letter-spacing: .2px;
+}
+.page .card .price,
+.page .card .stock {
+  margin: 0 0 8px;
+  font: 400 8px var(--font-main);
+}
+.page .card .stock { margin-bottom: 0; }
+
+/* ---------- Order panel ---------- */
+.page .order-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 12px 14px;
+}
+.page .order-panel h2 {
+  margin: 0 0 14px;
+  font: 800 13px var(--font-main);
+}
+
+.page .toggle { display: flex; gap: 4px; }
+.page .seg {
+  height: 21px;
+  padding: 0 9px;
+  font: 600 9.5px var(--font-main);
+  color: var(--others);
+  background: var(--text-inv);
+  border: 1px solid var(--others);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.page .seg.active { color: var(--text-inv); background: var(--others); }
+
+.page .order-body { flex: 1; display: grid; place-items: center; }
+.page .no-tx {
+  margin: 0;
+  font: 800 13px var(--font-main);
+  color: #a8a8a8;
+}
+
+.page .totals { margin: 0; font: 400 9.5px var(--font-main); }
+.page .totals div {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+.page .totals dt,
+.page .totals dd { margin: 0; font-weight: 400; }
+.page .totals .total {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px dotted var(--text);
+}
+.page .totals .total dt,
+.page .totals .total dd { font-weight: 600; }
+
+.page .checkout {
+  width: 100%;
+  height: 31px;
+  margin-top: 20px;
+  font: 600 10px var(--font-main);
+  color: var(--text-inv);
+  background: var(--others);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.page .checkout:hover { background: var(--title); }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+  .page,
+  body:has(.sidebar:hover) .page,
+  body:has(.sidebar:focus-within) .page,
+  body:has(.sidebar.pinned) .page {
+    grid-template-columns: 1fr;
+    /* on narrow screens the expanded sidebar overlays instead of pushing */
+    padding: 16px 16px 16px calc(var(--sidebar-w) + 12px);
+  }
+  .page .order-panel { min-height: 420px; }
+}
+
+
+
+/* ---------- Payment panel overlays the order panel ---------- */
+.page .menu-panel  { grid-column: 1; grid-row: 1; }
+
+/* put both panels in the same grid cell so the payment panel covers the order panel */
+.page .order-panel,
+.page .pay-panel   { grid-column: 2; grid-row: 1; }
+
+.page .pay-panel {
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .28);
+  animation: pay-pop .22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pay-pop {
+  from { opacity: 0; transform: translateY(14px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 900px) {
+  .page .menu-panel { grid-column: 1; grid-row: 1; }
+  .page .order-panel,
+  .page .pay-panel  { grid-column: 1; grid-row: 2; }
+}

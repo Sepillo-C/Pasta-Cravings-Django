@@ -9,4 +9,5 @@ urlpatterns = [
     path("dashboard/", include("apps.dashboard.urls")),
     path("customers/", include("apps.customers.urls")),
     path('settings/', include('apps.system_settings.urls')),
+    path("pos/", include("apps.pos.urls")),
 ]

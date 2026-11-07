@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def pos_view(request):
+    return render(request, "pos.html")
