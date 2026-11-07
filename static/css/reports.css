@@ -99,13 +99,6 @@ body:has(.sidebar.pinned) .sales-reports-page {
     object-fit: contain;
 }
 
-.report-btn.solid {
-    flex-shrink: 0;
-    color: #fff;
-    background: var(--report-title);
-    border-color: var(--report-title);
-}
-
 .report-btn.outline {
     flex: 1;
     color: var(--report-title);

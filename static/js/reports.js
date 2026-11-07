@@ -1,4 +1,3 @@
-
 // Helpers
 const $ = (id) => document.getElementById(id);
 
@@ -38,15 +37,13 @@ function seeded(seed) {
 function generateDaily() {
     const date = $("daily-date").value;
 
-    if (!date) {
-        $("daily-date").focus();
-        return;
-    }
+    if (!date) return;
 
     const random = seeded(Number(date.replace(/-/g, "")));
 
     const orders = Math.floor(30 + random() * 90);
     const cancelled = Math.floor(random() * 8);
+
     const gross = Math.round(
         orders * (180 + random() * 220) * 100
     ) / 100;
@@ -88,6 +85,7 @@ function setupMonthlyFilters() {
     }
 
     $("m-month").value = new Date().getMonth();
+    $("m-year").value = currentYear;
 }
 
 function generateMonthly() {
@@ -239,21 +237,32 @@ function printReport(reportId) {
 function initializeReports() {
     const date = new Date();
 
-    // Use the local date instead of UTC.
+    // Set today's local date.
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
 
     $("daily-date").value = `${year}-${month}-${day}`;
 
+    // Set monthly filters.
     setupMonthlyFilters();
 
-    $("daily-generate").addEventListener("click", generateDaily);
-    $("monthly-generate").addEventListener("click", generateMonthly);
+    // Automatically generate reports on initial page load.
+    generateDaily();
+    generateMonthly();
 
+    // Automatically update daily report when date changes.
+    $("daily-date").addEventListener("change", generateDaily);
+
+    // Automatically update monthly report when month or year changes.
+    $("m-month").addEventListener("change", generateMonthly);
+    $("m-year").addEventListener("change", generateMonthly);
+
+    // Export buttons.
     $("daily-export").addEventListener("click", exportDaily);
     $("monthly-export").addEventListener("click", exportMonthly);
 
+    // Print buttons.
     $("daily-print").addEventListener("click", () => printReport("daily"));
     $("monthly-print").addEventListener("click", () => printReport("monthly"));
 }

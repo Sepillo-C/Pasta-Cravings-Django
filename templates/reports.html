@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load static %}
 
@@ -26,11 +25,6 @@
 
         <div class="report-row report-controls">
             <input type="date" id="daily-date" aria-label="Report date">
-
-            <button class="report-btn solid" id="daily-generate">
-                <span>Generate</span>
-                <img src="{% static 'icons/generate.png' %}" alt="">
-            </button>
         </div>
 
         <div class="report-stats">
@@ -90,11 +84,6 @@
         <div class="report-row report-controls">
             <select id="m-month" aria-label="Month"></select>
             <select id="m-year" aria-label="Year"></select>
-
-            <button class="report-btn solid" id="monthly-generate">
-                <span>Generate</span>
-                <img src="{% static 'icons/generate.png' %}" alt="">
-            </button>
         </div>
 
         <div class="report-stats">
@@ -120,7 +109,7 @@
             <div class="report-chart" id="m-chart"
                  role="img" aria-label="Monthly sales bar chart">
                 <div class="report-chart-empty" id="m-empty">
-                    No data yet. Choose a month and select Generate.
+                    Loading monthly report...
                 </div>
             </div>
         </div>
