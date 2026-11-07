@@ -1,0 +1,235 @@
+* {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    background: #FBF9E4;
+    overflow-x: hidden;
+}
+
+.page-layout {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* CONTACT PAGE */
+
+.contact-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    flex: 1;
+
+    padding: 45px 6%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: center;
+    gap: 7%;
+
+    background: #FBF9E4;
+    color: #A02E2F;
+    font-family: "Montserrat", sans-serif;
+
+    border-bottom: 3px solid #A02E2F;
+}
+
+/* LEFT SIDE */
+
+.contact-info h1 {
+    margin: 0 0 18px;
+    color: #B53238;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(48px, 7vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.contact-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: #A02E2F;
+    text-decoration: none;
+}
+
+.contact-detail p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.contact-icon {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+.contact-message {
+    margin: 22px 0 16px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+.social-link {
+    align-items: center;
+    margin-bottom: 17px;
+}
+
+.social-link:hover {
+    opacity: .7;
+}
+
+.phone-detail {
+    align-items: center;
+}
+
+
+/* RIGHT SIDE - FORM */
+
+.contact-form-section {
+    display: flex;
+    align-items: center;
+}
+
+.contact-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    color: #000;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    border: 2.5px solid #B53238;
+    border-radius: 0;
+    background: transparent;
+    padding: 10px 12px;
+    color: #000;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-group input {
+    height: 43px;
+}
+
+.form-group textarea {
+    height: 75px;
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #A02E2F;
+    box-shadow: 0 0 0 2px rgba(160, 46, 47, .12);
+}
+
+
+/* SEND BUTTON */
+
+.send-btn {
+    align-self: center;
+    min-width: 105px;
+    height: 42px;
+    padding: 0 24px;
+    border: none;
+    border-radius: 30px;
+    background: #A02E2F;
+    color: #fff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.send-btn:hover {
+    background: #B53238;
+    transform: translateY(-2px);
+}
+
+
+/* TABLET */
+
+@media (max-width: 850px) {
+    .contact-page {
+        padding: 35px 5%;
+        gap: 5%;
+    }
+
+    .contact-info h1 {
+        font-size: 52px;
+    }
+
+    .contact-detail p,
+    .contact-message {
+        font-size: 12px;
+    }
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .contact-page {
+        grid-template-columns: 1fr;
+        gap: 35px;
+        padding: 30px 7%;
+    }
+
+    .contact-info h1 {
+        font-size: 48px;
+    }
+
+    .contact-form-section {
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .contact-page {
+        padding: 25px 5%;
+    }
+
+    .contact-info h1 {
+        font-size: 42px;
+    }
+
+    .contact-detail p,
+    .contact-message {
+        font-size: 11px;
+    }
+}

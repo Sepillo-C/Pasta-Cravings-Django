@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact | Pasta Cravings{% endblock %}
+
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="contact-page">
+
+    <section class="contact-info">
+
+        <h1>CONTACT</h1>
+
+        <div class="contact-detail">
+            <img src="{% static 'icons/loc_contact.png' %}" alt="Location" class="contact-icon">
+            <p>
+                Visit us at Quezon Eco-Tourism – Talao-Talao<br>
+                Port Road (Ibabang Talim – Cotta Bypass Road)
+            </p>
+        </div>
+
+        <div class="contact-detail">
+            <img src="{% static 'icons/time_contact.png' %}" alt="Operating hours" class="contact-icon">
+            <p>
+                We are open Monday to Saturday<br>
+                5pm to 10pm
+            </p>
+        </div>
+
+        <div class="contact-message">
+            FOR BULK ORDERS, PARTY TRAY AND EVENTS<br>
+            PLEASE CONTACT/MESSAGE US AT:
+        </div>
+
+        <a href="https://www.instagram.com/_PASTACRAVINGS/" target="_blank" class="contact-detail social-link">
+            <img src="{% static 'icons/inst_contact.png' %}" alt="Instagram" class="contact-icon">
+            <p>_PASTACRAVINGS</p>
+        </a>
+
+        <a href="https://www.facebook.com/" target="_blank" class="contact-detail social-link">
+            <img src="{% static 'icons/mess_contact.png' %}" alt="Messenger" class="contact-icon">
+            <p>PASTA CRAVINGS</p>
+        </a>
+
+        <div class="contact-detail phone-detail">
+            <img src="{% static 'icons/phone_contact.png' %}" alt="Phone" class="contact-icon">
+            <p>
+                0995 332 8505<br>
+                0945 992 7194
+            </p>
+        </div>
+
+    </section>
+
+
+    <section class="contact-form-section">
+
+        <form class="contact-form" method="POST">
+
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="full-name">FULL NAME</label>
+                <input type="text" id="full-name" name="full_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">EMAIL</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">MESSAGE</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+
+            <button type="submit" class="send-btn">SEND</button>
+
+        </form>
+
+    </section>
+
+</main>
+
+{% endblock %}

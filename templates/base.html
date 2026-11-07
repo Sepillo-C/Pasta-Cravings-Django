@@ -7,7 +7,8 @@
     <title>{% block title %}Pasta Cravings{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/components/navbar.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/components/footer.css' %}">
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -18,6 +19,8 @@
         {% endblock %}
 
         {% block content %}{% endblock %}
+
+        {% include "components/footer.html" %}
     </div>
 
 </body>
