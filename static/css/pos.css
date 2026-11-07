@@ -9,213 +9,880 @@
   --font-main: "Montserrat", system-ui, sans-serif;
   --shadow: 0 2px 6px rgba(0, 0, 0, .13);
 
-  /* Sidebar widths (must match .sidebar in your navbar CSS) */
+  /* Sidebar widths */
   --sidebar-w: 78px;
   --sidebar-w-open: 280px;
 
-  min-height: 100vh;
+  /* Page height */
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+
   padding: 30px 26px 30px calc(var(--sidebar-w) + 17px);
-  /* same timing as the sidebar's width transition so they move together */
+
   transition: padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, .58fr);
   gap: 16px;
   align-items: stretch;
+
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-main);
   font-weight: 400;
 }
 
-/* Shift the page when the sidebar expands (hover, keyboard focus, or pinned) */
+
+/* ==========================================
+   SIDEBAR TRANSITION
+========================================== */
+
 body:has(.sidebar:hover) .page,
 body:has(.sidebar:focus-within) .page,
 body:has(.sidebar.pinned) .page {
   padding-left: calc(var(--sidebar-w-open) + 17px);
 }
 
-.page, .page * { box-sizing: border-box; }
+
+.page,
+.page * {
+  box-sizing: border-box;
+}
+
 
 .page .panel {
   background: var(--text-inv);
   border: 2px solid var(--others);
 }
 
-/* ---------- Menu panel ---------- */
-.page .menu-panel { padding: 28px 22px 24px; }
+
+/* ==========================================
+   MENU PANEL
+========================================== */
+
+.page .menu-panel {
+  grid-column: 1;
+  grid-row: 1;
+
+  padding: 28px 22px 24px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+
+/* ---------- Search Bar ---------- */
 
 .page .search {
   display: flex;
   align-items: center;
   gap: 8px;
+
   height: 32px;
   padding: 0 12px;
+
   background: #f1f1f1;
   border-radius: 8px;
   color: var(--others);
+
+  flex-shrink: 0;
 }
+
 .page .search input {
   flex: 1;
+  min-width: 0;
+
   border: 0;
   outline: 0;
   background: transparent;
+
   font: 400 11px var(--font-main);
   color: var(--text);
 }
-.page .search input::placeholder { color: #aaa; }
 
-.page .chips { display: flex; gap: 6px; margin-top: 22px; }
+.page .search input::placeholder {
+  color: #aaa;
+}
+
+
+/* ---------- Category Buttons ---------- */
+
+.page .chips {
+  display: flex;
+  gap: 6px;
+
+  margin-top: 22px;
+
+  flex-shrink: 0;
+}
+
 .page .chip {
   width: 70px;
   height: 20px;
   padding: 0;
+
   font: 600 10px var(--font-main);
   color: var(--text);
+
   background: var(--text-inv);
   border: 1px solid #777;
   border-radius: 3px;
+
   cursor: pointer;
 }
+
 .page .chip.active {
   color: var(--text-inv);
   background: var(--others);
   border-color: var(--others);
 }
 
-/* ---------- Menu cards ---------- */
+
+/* ==========================================
+   MENU GRID - INDEPENDENT SCROLLING
+========================================== */
+
 .page .menu-grid {
+  /* Take only the remaining menu-panel height */
+  flex: 1 1 0%;
+  height: 0;
+  min-height: 0;
+  min-width: 0;
+
   margin-top: 28px;
-  padding: 0 12px;
+
+  /* Space for the overlapping food images */
+  padding: 35px 12px 20px;
+
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 10px;
-  row-gap: 14px;
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  /* Fixed spacing between products */
+  column-gap: 12px;
+  row-gap: 30px;
+
+  /* Each row gets enough room */
+  grid-auto-rows: 145px;
+
+  align-content: start;
+
+  /* Hide products outside the visible viewport */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
 }
+
+
+/* ---------- Scrollbar ---------- */
+
+.page .menu-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.page .menu-grid::-webkit-scrollbar-thumb {
+  background: #b5b5b5;
+  border-radius: 10px;
+}
+
+.page .menu-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+/* ==========================================
+   INDIVIDUAL FOOD CARDS
+========================================== */
+
 .page .card {
-  margin-top: 36px;
-  padding: 0 6px 12px;
+  height: 105px;
+  min-width: 0;
+
+  margin: 0;
+  padding: 0 8px 12px;
+
   text-align: center;
+
   background: var(--text-inv);
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
+
+
+/* ---------- Food Images ---------- */
+
 .page .card img {
   display: block;
+
   width: 68px;
   height: 68px;
-  margin: -34px auto 8px;
+
+  /* Image overlaps the top of the card */
+  margin: -34px auto 10px;
+
   border-radius: 50%;
   object-fit: cover;
 }
-.page .card h3 {
-  margin: 0 0 8px;
-  font: 600 8px var(--font-main);
-  text-transform: uppercase;
-  letter-spacing: .2px;
-}
-.page .card .price,
-.page .card .stock {
-  margin: 0 0 8px;
-  font: 400 8px var(--font-main);
-}
-.page .card .stock { margin-bottom: 0; }
 
-/* ---------- Order panel ---------- */
+
+/* ---------- Food Name ---------- */
+
+.page .card h3 {
+  margin: 0 0 9px;
+
+  font: 700 12px var(--font-main);
+
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+
+/* ---------- Price and Stock ---------- */
+
+.page .card .price {
+  margin: 0 0 9px;
+
+  font: 500 11px var(--font-main);
+}
+
+.page .card .stock {
+  margin: 0;
+
+  font: 400 10px var(--font-main);
+}
+
+
+/* ==========================================
+   CLICKABLE MENU CARDS
+========================================== */
+
+.page .card {
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.page .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .18);
+}
+
+.page .card:active {
+  transform: scale(.98);
+}
+
+.page .card:focus-visible {
+  outline: 2px solid var(--others);
+  outline-offset: 2px;
+}
+
+.page .card.sold-out {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.page .card.sold-out:hover {
+  transform: none;
+  box-shadow: var(--shadow);
+}
+
+
+/* ==========================================
+   ORDER PANEL
+========================================== */
+
 .page .order-panel {
+  grid-column: 2;
+  grid-row: 1;
+
   display: flex;
   flex-direction: column;
+
+  min-height: 0;
+
   padding: 22px 12px 14px;
 }
+
 .page .order-panel h2 {
   margin: 0 0 14px;
+
   font: 800 13px var(--font-main);
 }
 
-.page .toggle { display: flex; gap: 4px; }
+
+/* ---------- Order Type Toggle ---------- */
+
+.page .toggle {
+  display: flex;
+  gap: 4px;
+}
+
 .page .seg {
   height: 21px;
   padding: 0 9px;
+
   font: 600 9.5px var(--font-main);
   color: var(--others);
+
+  background: var(--text-inv);
+  border: 1px solid var(--others);
+  border-radius: 3px;
+
+  cursor: pointer;
+}
+
+.page .seg.active {
+  color: var(--text-inv);
+  background: var(--others);
+}
+
+
+/* ---------- Order Body ---------- */
+
+.page .order-body {
+  flex: 1;
+  min-height: 0;
+
+  display: grid;
+  place-items: center;
+}
+
+.page .no-tx {
+  margin: 0;
+
+  font: 800 13px var(--font-main);
+  color: #a8a8a8;
+}
+
+
+/* ==========================================
+   ORDER LIST
+========================================== */
+
+/* Switch the body from centered "No Transaction" to a top-aligned list */
+.page .order-body.has-items {
+  display: block;
+  margin-top: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.page .order-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page .order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  padding: 8px 2px;
+  border-bottom: 1px solid #eee;
+}
+
+.page .order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.page .order-name {
+  font: 700 10.5px var(--font-main);
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+
+.page .order-price {
+  font: 400 10px var(--font-main);
+}
+
+.page .order-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.page .qty {
+  min-width: 14px;
+  text-align: center;
+  font: 600 10.5px var(--font-main);
+}
+
+.page .qty-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+
+  font: 600 12px/1 var(--font-main);
+  color: var(--others);
+
   background: var(--text-inv);
   border: 1px solid var(--others);
   border-radius: 3px;
   cursor: pointer;
 }
-.page .seg.active { color: var(--text-inv); background: var(--others); }
 
-.page .order-body { flex: 1; display: grid; place-items: center; }
-.page .no-tx {
-  margin: 0;
-  font: 800 13px var(--font-main);
-  color: #a8a8a8;
+.page .qty-btn:hover {
+  background: #f8e9e9;
 }
 
-.page .totals { margin: 0; font: 400 9.5px var(--font-main); }
+.page .remove-btn {
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  padding: 0;
+
+  font: 600 14px/1 var(--font-main);
+  color: var(--text-inv);
+
+  background: var(--others);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.page .remove-btn:hover {
+  background: var(--title);
+}
+
+
+/* ==========================================
+   ORDER TOTALS
+========================================== */
+
+.page .totals {
+  margin: 0;
+
+  font: 400 9.5px var(--font-main);
+}
+
 .page .totals div {
   display: flex;
   justify-content: space-between;
+
   padding: 2px 0;
 }
+
 .page .totals dt,
-.page .totals dd { margin: 0; font-weight: 400; }
+.page .totals dd {
+  margin: 0;
+  font-weight: 400;
+}
+
 .page .totals .total {
   margin-top: 6px;
   padding-top: 8px;
+
   border-top: 1px dotted var(--text);
 }
+
 .page .totals .total dt,
-.page .totals .total dd { font-weight: 600; }
+.page .totals .total dd {
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   CHECKOUT BUTTON
+========================================== */
 
 .page .checkout {
   width: 100%;
   height: 31px;
+
   margin-top: 20px;
+
   font: 600 10px var(--font-main);
   color: var(--text-inv);
+
   background: var(--others);
   border: 0;
   border-radius: 4px;
+
   cursor: pointer;
 }
-.page .checkout:hover { background: var(--title); }
 
-/* ---------- Small screens ---------- */
+.page .checkout:hover {
+  background: var(--title);
+}
+
+
+/* ==========================================
+   PAYMENT PANEL - FIGMA DESIGN
+========================================== */
+
+.page .pay-panel {
+  grid-column: 2;
+  grid-row: 1;
+
+  position: relative;
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 14px;
+
+  background: var(--text-inv);
+
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .28);
+
+  animation: pay-pop .22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* ---------- Back Button ---------- */
+
+.page .pay-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  padding: 0;
+  margin: 0;
+
+  color: var(--others);
+
+  background: transparent;
+  border: none;
+
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.page .pay-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+
+/* ---------- Total Amount ---------- */
+
+.page .pay-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  min-height: 24px;
+
+  margin-top: 66px;
+  margin-bottom: 20px;
+
+  font-family: var(--font-main);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.page .pay-total span,
+.page .pay-total strong {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+
+/* ---------- Cash and Change Labels ---------- */
+
+.page .pay-label {
+  display: block;
+
+  margin: 0 0 5px;
+
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 700;
+
+  color: var(--text);
+}
+
+
+/* ---------- Cash and Change Inputs ---------- */
+
+.page .pay-input {
+  display: block;
+
+  width: 100%;
+  height: 34px;
+
+  padding: 0 10px;
+  margin: 0 0 8px;
+
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+
+  color: var(--text);
+
+  background: var(--text-inv);
+
+  border: 1px solid #b8b8c0;
+  border-radius: 5px;
+
+  outline: none;
+}
+
+.page .pay-input:focus {
+  border-color: var(--others);
+}
+
+
+/* ---------- Payment Message ---------- */
+
+.page .pay-msg {
+  min-height: 0;
+
+  margin: 0;
+
+  font-family: var(--font-main);
+  font-size: 10px;
+  font-weight: 600;
+
+  color: var(--others);
+}
+
+
+/* ==========================================
+   NUMERIC KEYPAD
+========================================== */
+
+.page .keypad {
+  display: grid;
+
+  width: 87%;
+  max-width: 276px;
+
+  height: 46vh;
+  max-height: 314px;
+
+  margin: 12px 0 0;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: clamp(40px, 6.6vh, 46px);
+
+  align-content: center;
+
+  border: 1px solid #eeeeee;
+
+  background: var(--text-inv);
+}
+
+
+/* ---------- Keypad Buttons ---------- */
+
+.page .keypad button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 0;
+
+  padding: 0;
+
+  font-family: var(--font-main);
+  font-size: 14px;
+  font-weight: 400;
+
+  color: var(--text);
+
+  background: var(--text-inv);
+
+  border: 0;
+  border-right: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+
+  cursor: pointer;
+
+  transition: background .15s ease;
+}
+
+
+/* ---------- Empty Keypad Spaces ---------- */
+
+.page .key-blank {
+  display: block;
+
+  background: var(--text-inv);
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+
+/* ---------- Red Keypad Buttons ---------- */
+
+.page .keypad button.key-red {
+  color: var(--text-inv);
+
+  background: #c52e27;
+
+  border-color: #c52e27;
+}
+
+.page .keypad button.key-red:hover {
+  background: #a92722;
+}
+
+.page .keypad button:not(.key-red):hover {
+  background: #f5f5f5;
+}
+
+
+/* ---------- Keypad Icons ---------- */
+
+.page .keypad button svg {
+  width: 22px;
+  height: 22px;
+}
+
+
+/* ==========================================
+   PAY BUTTON
+========================================== */
+
+.page .pay-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  margin-top: auto;
+
+  font-family: var(--font-main);
+  font-size: 10px;
+  font-weight: 600;
+
+  color: var(--text-inv);
+
+  background: #c52e27;
+
+  border: none;
+  border-radius: 5px;
+
+  cursor: pointer;
+}
+
+.page .pay-btn:hover {
+  background: var(--title);
+}
+
+
+/* ==========================================
+   PAYMENT PANEL ANIMATION
+========================================== */
+
+@keyframes pay-pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+
+/* ==========================================
+   SMALL SCREENS
+========================================== */
+
 @media (max-width: 900px) {
+
   .page,
   body:has(.sidebar:hover) .page,
   body:has(.sidebar:focus-within) .page,
   body:has(.sidebar.pinned) .page {
+
     grid-template-columns: 1fr;
-    /* on narrow screens the expanded sidebar overlays instead of pushing */
+
     padding: 16px 16px 16px calc(var(--sidebar-w) + 12px);
+
+    height: auto;
+    min-height: 100vh;
+
+    overflow: visible;
   }
-  .page .order-panel { min-height: 420px; }
-}
 
 
+  /* Menu panel */
 
-/* ---------- Payment panel overlays the order panel ---------- */
-.page .menu-panel  { grid-column: 1; grid-row: 1; }
+  .page .menu-panel {
+    grid-column: 1;
+    grid-row: 1;
 
-/* put both panels in the same grid cell so the payment panel covers the order panel */
-.page .order-panel,
-.page .pay-panel   { grid-column: 2; grid-row: 1; }
+    height: 75vh;
+    min-height: 450px;
+  }
 
-.page .pay-panel {
-  position: relative;
-  z-index: 5;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, .28);
-  animation: pay-pop .22s cubic-bezier(0.22, 1, 0.36, 1);
-}
 
-@keyframes pay-pop {
-  from { opacity: 0; transform: translateY(14px) scale(.97); }
-  to   { opacity: 1; transform: none; }
-}
+  /* Order and payment panels */
 
-@media (max-width: 900px) {
-  .page .menu-panel { grid-column: 1; grid-row: 1; }
   .page .order-panel,
-  .page .pay-panel  { grid-column: 1; grid-row: 2; }
+  .page .pay-panel {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .page .order-panel {
+    min-height: 420px;
+  }
+
+
+  /* Keep the product area scrollable */
+
+  .page .menu-grid {
+    flex: 1 1 0%;
+    height: 0;
+    min-height: 0;
+  }
+}
+
+
+/* ==========================================
+   PANEL VISIBILITY
+========================================== */
+
+/* Ensure hidden panels stay hidden */
+.page [hidden] {
+  display: none !important;
+}
+
+
+/* ==========================================
+   SEARCH - NO RESULTS MESSAGE
+========================================== */
+
+.page .no-results {
+  grid-column: 1 / -1;
+
+  margin: 40px 0 0;
+
+  text-align: center;
+
+  font: 800 13px var(--font-main);
+  color: #a8a8a8;
 }

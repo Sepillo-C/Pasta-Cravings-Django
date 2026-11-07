@@ -17,113 +17,118 @@
 
   <!-- MENU PANEL -->
   <section class="panel menu-panel">
+
     <label class="search">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"/>
+        <path d="m20 20-3.5-3.5"/>
+      </svg>
       <input type="text" placeholder="Search...">
     </label>
 
+    <!-- CATEGORY BUTTONS -->
     <div class="chips">
-      <button class="chip active">All</button>
-      <button class="chip">Pasta</button>
-      <button class="chip">Rice Bowl</button>
-      <button class="chip">Starters</button>
+      <button class="chip active" data-category="all">All</button>
+      <button class="chip" data-category="pasta">Pasta</button>
+      <button class="chip" data-category="rice-bowl">Rice Bowl</button>
+      <button class="chip" data-category="starters">Starters</button>
     </div>
 
+    <!-- MENU ITEMS -->
     <div class="menu-grid">
 
-      <article class="card">
+      <article class="card" data-category="rice-bowl">
         <img src="{% static 'images/chicken_ala_king.png' %}" alt="Chicken Ala King">
         <h3>Chicken Ala King</h3>
         <p class="price">₱95</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="starters">
         <img src="{% static 'images/cheesy_poppers.png' %}" alt="Cheesy Poppers">
         <h3>Cheesy Poppers</h3>
         <p class="price">₱95</p>
         <p class="stock">11 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="rice-bowl">
         <img src="{% static 'images/orange_chickens.png' %}" alt="Orange Chicken">
         <h3>Orange Chicken</h3>
         <p class="price">₱95</p>
         <p class="stock">16 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="rice-bowl">
         <img src="{% static 'images/hungarian_sausage.png' %}" alt="Hungarian Sausage">
         <h3>Hungarian Sausage</h3>
         <p class="price">₱105</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="rice-bowl">
         <img src="{% static 'images/lechon_kawali.png' %}" alt="Lechon Kawali">
         <h3>Lechon Kawali</h3>
         <p class="price">₱110</p>
         <p class="stock">11 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="pasta">
         <img src="{% static 'images/aglio_olio.png' %}" alt="Aglio Olio">
         <h3>Aglio Olio</h3>
         <p class="price">₱95</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="pasta">
         <img src="{% static 'images/bolognese.png' %}" alt="Bolognese">
         <h3>Bolognese</h3>
         <p class="price">₱105</p>
         <p class="stock">11 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="pasta">
         <img src="{% static 'images/tuna_pesto.png' %}" alt="Tuna Pesto">
         <h3>Tuna Pesto</h3>
         <p class="price">₱105</p>
         <p class="stock">16 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="pasta">
         <img src="{% static 'images/creamy_truffle.png' %}" alt="Creamy Truffle">
         <h3>Creamy Truffle</h3>
         <p class="price">₱105</p>
         <p class="stock">16 Bowls available</p>
       </article>
 
-
-      <article class="card">
+      <article class="card" data-category="starters">
         <img src="{% static 'images/nachos.png' %}" alt="Nachos">
         <h3>Nachos</h3>
         <p class="price">₱95</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="starters">
         <img src="{% static 'images/grilled_cheese.png' %}" alt="Grilled Cheese">
         <h3>Grilled Cheese</h3>
         <p class="price">₱90</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="starters">
         <img src="{% static 'images/cheesy_quesadilla.png' %}" alt="Cheesy Quesadilla">
         <h3>Cheesy Quesadilla</h3>
         <p class="price">₱100</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="starters">
         <img src="{% static 'images/beef_quesadilla.png' %}" alt="Beef Quesadilla">
         <h3>Beef Quesadilla</h3>
         <p class="price">₱120</p>
         <p class="stock">20 Bowls available</p>
       </article>
 
-      <article class="card">
+      <article class="card" data-category="starters">
         <img src="{% static 'images/fries.png' %}" alt="Parmesan Truffle Fries">
         <h3>Parmesan Truffle Fries</h3>
         <p class="price">₱125</p>
@@ -133,75 +138,90 @@
     </div>
   </section>
 
+
   <!-- ORDER PANEL -->
-  <section class="panel order-panel">
-    <h2>Orders #34562</h2>
-
-    <div class="toggle">
-      <button class="seg active">Dine In</button>
-      <button class="seg">To Go</button>
-    </div>
-
-    <div class="order-body">
-      <p class="no-tx">No Transaction</p>
-    </div>
-
-    <dl class="totals">
-      <div><dt>Subtotal</dt><dd>Rp 0</dd></div>
-      <div><dt>Discount</dt><dd>0%</dd></div>
-      <div><dt>Service Charge</dt><dd>Rp 0</dd></div>
-      <div><dt>PPN</dt><dd>11%</dd></div>
-      <div class="total"><dt>Total</dt><dd>Rp 0</dd></div>
-    </dl>
-
-    <button class="checkout">Checkout</button>
-  </section>
-
-
-    <!-- ORDER PANEL -->
   <section class="panel order-panel" id="order-panel">
+
     <h2>Orders #34562</h2>
 
+    <!-- ORDER TYPE -->
     <div class="toggle">
       <button class="seg active">Dine In</button>
       <button class="seg">To Go</button>
     </div>
 
+    <!-- ORDER BODY -->
     <div class="order-body">
       <p class="no-tx">No Transaction</p>
     </div>
 
+    <!-- ORDER TOTALS -->
     <dl class="totals">
-      <div><dt>Subtotal</dt><dd>Rp 0</dd></div>
-      <div><dt>Discount</dt><dd>0%</dd></div>
-      <div><dt>Service Charge</dt><dd>Rp 0</dd></div>
-      <div><dt>PPN</dt><dd>11%</dd></div>
-      <div class="total"><dt>Total</dt><dd id="order-total">Rp 0</dd></div>
+
+      <div>
+        <dt>Subtotal</dt>
+        <dd id="order-subtotal">₱0.00</dd>
+      </div>
+
+      <div>
+        <dt>Discount</dt>
+        <dd>0%</dd>
+      </div>
+
+      <div>
+        <dt>Service Charge</dt>
+        <dd id="order-service">₱0.00</dd>
+      </div>
+
+      <div>
+        <dt>PPN</dt>
+        <dd>11%</dd>
+      </div>
+
+      <div class="total">
+        <dt>Total</dt>
+        <dd id="order-total">₱0.00</dd>
+      </div>
+
     </dl>
 
-    <button class="checkout" id="checkout-btn" type="button">Checkout</button>
-  </section>
-
-  <!-- PAYMENT PANEL (shown after Checkout) -->
-  <section class="panel pay-panel" id="pay-panel" hidden>
-    <button class="pay-back" id="pay-back" type="button" aria-label="Back to order">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    <button class="checkout" id="checkout-btn" type="button">
+      Checkout
     </button>
 
+  </section>
+
+
+  <!-- PAYMENT PANEL -->
+  <section class="panel pay-panel" id="pay-panel" hidden>
+
+    <!-- BACK BUTTON -->
+    <button class="pay-back" id="pay-back" type="button" aria-label="Back to order">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <!-- PAYMENT TOTAL -->
     <div class="pay-total">
       <span>Total:</span>
-      <strong id="pay-total">Rp 0</strong>
+      <strong id="pay-total">₱0.00</strong>
     </div>
 
+    <!-- CASH INPUT -->
     <label class="pay-label" for="cash">Cash</label>
     <input class="pay-input" id="cash" type="text" readonly>
 
+    <!-- CHANGE INPUT -->
     <label class="pay-label" for="change">Change</label>
     <input class="pay-input" id="change" type="text" readonly>
 
+    <!-- PAYMENT MESSAGE -->
     <p class="pay-msg" id="pay-msg" role="status"></p>
 
+    <!-- NUMERIC KEYPAD -->
     <div class="keypad" id="keypad">
+
       <button type="button" data-key="1">1</button>
       <button type="button" data-key="2">2</button>
       <button type="button" data-key="3">3</button>
@@ -215,21 +235,38 @@
       <button type="button" data-key="7">7</button>
       <button type="button" data-key="8">8</button>
       <button type="button" data-key="9">9</button>
+
       <button type="button" class="key-red" data-key="back" aria-label="Backspace">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5H9l-6 7 6 7h11a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1Z"/><path d="m16 9-5 6m0-6 5 6"/></svg>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 5H9l-6 7 6 7h11a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1Z"/>
+          <path d="m16 9-5 6m0-6 5 6"/>
+        </svg>
       </button>
 
       <button type="button" data-key="000">000</button>
       <button type="button" data-key="0">0</button>
       <span class="key-blank"></span>
+
       <button type="button" class="key-red" data-key="ok" aria-label="Confirm">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m5 12 5 5 9-10"/>
+        </svg>
       </button>
+
     </div>
 
-    <button class="checkout pay-btn" id="pay-btn" type="button">Pay</button>
+    <!-- PAY BUTTON -->
+    <button class="checkout pay-btn" id="pay-btn" type="button">
+      Pay
+    </button>
+
   </section>
 
-  
 </main>
+{% endblock %}
+
+
+<!-- POS JAVASCRIPT -->
+{% block extra_js %}
+<script src="{% static 'js/pos.js' %}" defer></script>
 {% endblock %}
