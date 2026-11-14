@@ -10,4 +10,5 @@ urlpatterns = [
     path("customers/", include("apps.customers.urls")),
     path('settings/', include('apps.system_settings.urls')),
     path("pos/", include("apps.pos.urls")),
+    path("products/", include("apps.products.urls")),
 ]
