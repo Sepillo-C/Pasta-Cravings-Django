@@ -8,148 +8,109 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="menu-page">
 
-    <!-- BOTTOM DECORATIONS -->
     <div class="menu-decoration menu-decoration-left">
         <img src="{% static 'images/wiggly_bottom.png' %}" alt="">
     </div>
-
     <div class="menu-decoration menu-decoration-right">
         <img src="{% static 'images/wiggly_bottom.png' %}" alt="">
     </div>
 
-    <!-- MENU HEADING -->
     <section class="menu-heading">
         <h1>MENU</h1>
         <h2>Starters</h2>
     </section>
 
+    <nav class="menu-category-nav">
+        <a href="#starters" class="active">Starters</a>
+        <a href="#pasta">Pasta</a>
+        <a href="#rice-bowls">Rice Bowls</a>
+    </nav>
+
     <main>
-
-        <!-- STARTERS -->
-        <section class="starters-section">
-
+        <section class="starters-section" id="starters">
             <div class="starter-row-top">
-
                 <div class="starter-card">
                     <img src="{% static 'images/nachos.png' %}" alt="Nachos">
                     <h3>NACHOS</h3>
-                    <p>
-                        Chips with seasoned ground beef, salsa,
-                        creamy cheese sauce, and grated cheese.
-                    </p>
+                    <p>Chips with seasoned ground beef, salsa, creamy cheese sauce, and grated cheese.</p>
                     <div class="price">₱95</div>
                 </div>
 
                 <div class="starter-card">
                     <img src="{% static 'images/grilled_cheese.png' %}" alt="Grilled Cheese">
                     <h3>GRILLED<br>CHEESE</h3>
-                    <p>
-                        Golden bread filled with sliced cheese
-                        and cheddar, served with a tomato dip.
-                    </p>
+                    <p>Golden bread filled with sliced cheese and cheddar, served with a tomato dip.</p>
                     <div class="price">₱90</div>
                 </div>
 
                 <div class="starter-card">
                     <img src="{% static 'images/cheesy_quesadilla.png' %}" alt="Cheesy Quesadilla">
                     <h3>CHEESY<br>QUESADILLA</h3>
-                    <p>
-                        A cheesy trio of cheddar, milky cheese
-                        and creamy cheese sauce.
-                    </p>
+                    <p>A cheesy trio of cheddar, milky cheese and creamy cheese sauce.</p>
                     <div class="price">₱100</div>
                 </div>
-
             </div>
 
             <div class="starter-row-bottom">
-
                 <div class="starter-card">
                     <img src="{% static 'images/beef_quesadilla.png' %}" alt="Beef Quesadilla">
                     <h3>BEEF<br>QUESADILLA</h3>
-                    <p>
-                        Chips with seasoned ground beef, salsa,
-                        creamy cheese sauce, and grated cheese.
-                    </p>
+                    <p>Chips with seasoned ground beef, salsa, creamy cheese sauce, and grated cheese.</p>
                     <div class="price">₱120</div>
                 </div>
 
                 <div class="starter-card">
                     <img src="{% static 'images/fries.png' %}" alt="Parmesan Truffle Fries">
                     <h3>PARMESAN<br>TRUFFLE<br>FRIES</h3>
-                    <p>
-                        Optional:<br>
-                        Plain Fries — ₱85<br>
-                        Cheesy Bacon Fries — ₱100
-                    </p>
+                    <p>Optional:<br>Plain Fries — ₱85<br>Cheesy Bacon Fries — ₱100</p>
                     <div class="price">₱125</div>
                 </div>
-
             </div>
-
         </section>
 
-        <!-- PASTA -->
-        <section class="pasta-section">
-
+        <section class="pasta-section" id="pasta">
             <h2 class="pasta-title">Pasta</h2>
 
-            <div class="pasta-item pasta-item-1">
+            <div class="pasta-item">
                 <div class="pasta-price">₱95</div>
                 <img src="{% static 'images/aglio_olio.png' %}" alt="Aglio Olio">
                 <div class="pasta-info">
                     <h3>AGLIO OLIO</h3>
-                    <p>
-                        Classic garlic and olive oil pasta tossed
-                        with herbs and a flavorful kick of chorizo.
-                    </p>
+                    <p>Classic garlic and olive oil pasta tossed with herbs and a flavorful kick of chorizo.</p>
                 </div>
             </div>
 
-            <div class="pasta-item pasta-item-2">
+            <div class="pasta-item pasta-item-reverse">
                 <div class="pasta-info">
                     <h3>BOLOGNESE</h3>
-                    <p>
-                        Chips with seasoned ground beef, salsa,
-                        creamy cheese sauce, and grated cheese.
-                    </p>
+                    <p>Chips with seasoned ground beef, salsa, creamy cheese sauce, and grated cheese.</p>
                 </div>
                 <img src="{% static 'images/bolognese.png' %}" alt="Bolognese">
                 <div class="pasta-price">₱105</div>
             </div>
 
-            <div class="pasta-item pasta-item-3">
+            <div class="pasta-item">
                 <div class="pasta-price">₱105</div>
                 <img src="{% static 'images/tuna_pesto.png' %}" alt="Tuna Pesto">
                 <div class="pasta-info">
                     <h3>TUNA PESTO</h3>
-                    <p>
-                        Fresh basil pesto blended with tuna,
-                        tossed over pasta for a flavorful bite.
-                    </p>
+                    <p>Fresh basil pesto blended with tuna, tossed over pasta for a flavorful bite.</p>
                 </div>
             </div>
 
-            <div class="pasta-item pasta-item-4">
+            <div class="pasta-item pasta-item-reverse">
                 <div class="pasta-info">
                     <h3>CREAMY TRUFFLE</h3>
-                    <p>
-                        Pasta in a rich white truffle cream sauce,
-                        topped with crispy bacon for a savory finish.
-                    </p>
+                    <p>Pasta in a rich white truffle cream sauce, topped with crispy bacon for a savory finish.</p>
                 </div>
                 <img src="{% static 'images/creamy_truffle.png' %}" alt="Creamy Truffle">
                 <div class="pasta-price">₱105</div>
             </div>
-
         </section>
 
-        <!-- RICE BOWLS -->
-        <section class="rice-section">
-
+        <section class="rice-section" id="rice-bowls">
             <h2 class="rice-title">Rice Bowls</h2>
 
             <div class="rice-item rice-item-1">
@@ -206,10 +167,43 @@
                     <p>Crispy golden pork belly with tender meat and rich flavor.</p>
                 </div>
             </div>
-
         </section>
-
     </main>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".menu-category-nav a");
+    const nav = document.querySelector(".menu-category-nav");
+    let frame;
+
+    links.forEach(link => link.addEventListener("click", e => {
+        e.preventDefault();
+
+        const target = document.querySelector(link.hash);
+        if (!target) return;
+
+        cancelAnimationFrame(frame);
+        links.forEach(a => a.classList.toggle("active", a === link));
+
+        const start = scrollY;
+        const end = target.getBoundingClientRect().top + start - nav.offsetHeight;
+        const duration = 1000;
+        let startTime;
+
+        function scroll(time) {
+            startTime ??= time;
+            const p = Math.min((time - startTime) / duration, 1);
+            const ease = p < 0.5 ? 4 * p ** 3 : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+            scrollTo(0, start + (end - start) * ease);
+
+            if (p < 1) frame = requestAnimationFrame(scroll);
+            else history.replaceState(null, "", link.hash);
+        }
+
+        frame = requestAnimationFrame(scroll);
+    }));
+});
+</script>
 {% endblock %}
