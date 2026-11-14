@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Orders - Pasta Cravings{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
+{% endblock %}
+
+{% block navbar %}
+    {% include "components/navbar_database.html" %}
+{% endblock %}
+
+{% block content %}
+<main class="main">
+
+    <!-- TOP SEARCH BAR -->
+    <header class="topbar">
+        <label class="search-box">
+            <span class="search-icon">⌕</span>
+            <input type="search" placeholder="Search...">
+        </label>
+    </header>
+
+    <!-- ORDER HISTORY -->
+    <section class="order-history">
+        <h2>ORDER HISTORY</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>ID</th>
+                        <th>Menu</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>#215</td>
+                        <td>CREAMY TRUFFLE<br>₱105</td>
+                        <td>22 June 2026, 12:21 PM</td>
+                        <td><span class="status completed">COMPLETED</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Jane Doe</td>
+                        <td>#216</td>
+                        <td>CHICKEN ALA KING<br>₱95</td>
+                        <td>22 June 2026, 12:35 PM</td>
+                        <td><span class="status rejected">REJECTED</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>Alex Smith</td>
+                        <td>#217</td>
+                        <td>CHEESY POPPERS<br>₱95</td>
+                        <td>22 June 2026, 1:00 PM</td>
+                        <td><span class="status preparing">PREPARING</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+{% endblock %}

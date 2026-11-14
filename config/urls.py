@@ -8,7 +8,8 @@ urlpatterns = [
     path("reports/", include("apps.reports.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
     path("customers/", include("apps.customers.urls")),
-    path('settings/', include('apps.system_settings.urls')),
+    path("settings/", include("apps.system_settings.urls")),
     path("pos/", include("apps.pos.urls")),
     path("products/", include("apps.products.urls")),
+    path("orders/", include("apps.orders.urls")),
 ]
