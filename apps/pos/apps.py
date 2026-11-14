@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 
-
 class PosConfig(AppConfig):
-    name = 'pos'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.pos"
+    label = "pos"

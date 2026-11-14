@@ -1,494 +1,296 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => document.querySelectorAll(selector);
+    const money = amount => `₱${amount.toFixed(2)}`;
 
-    // ==========================================
-    // ELEMENTS
-    // ==========================================
+    const cards = $$(".menu-grid .card");
+    const cart = {};
 
-    const orderPanel = document.getElementById("order-panel");
-    const payPanel = document.getElementById("pay-panel");
+    const orderBody = $(".order-body");
+    const orderPanel = $("#order-panel");
+    const payPanel = $("#pay-panel");
+    const cashInput = $("#cash");
+    const changeInput = $("#change");
+    const payMsg = $("#pay-msg");
+    const payBtn = $("#pay-btn");
+    const successModal = $("#success-modal");
 
-    const checkoutBtn = document.getElementById("checkout-btn");
-    const backBtn = document.getElementById("pay-back");
-    const payBtn = document.getElementById("pay-btn");
+    let cash = "";
+    let paymentSaved = false;
 
-    const orderTotal = document.getElementById("order-total");
-    const payTotal = document.getElementById("pay-total");
+    // CALCULATE TOTAL
+    const getTotal = () => Object.values(cart)
+        .reduce((sum, item) => sum + item.price * item.qty, 0);
 
-    const cashInput = document.getElementById("cash");
-    const changeInput = document.getElementById("change");
-
-    const keypad = document.getElementById("keypad");
-    const payMsg = document.getElementById("pay-msg");
-
-
-    // ==========================================
-    // VARIABLES
-    // ==========================================
-
-    let cashAmount = "";
-
-
-    // ==========================================
-    // HELPER FUNCTIONS
-    // ==========================================
-
-    // Get the numerical total from the order panel
-    function getTotal() {
-
-        return Number(
-            orderTotal.textContent.replace(/[^\d.-]/g, "")
-        ) || 0;
-
-    }
-
-
-    // Format amounts using Philippine Peso
-    function formatCurrency(amount) {
-
-        return "₱" + Number(amount).toLocaleString("en-PH", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
-    }
-
-
-    // Update cash input
-    function updateCash() {
-
-        cashInput.value = cashAmount
-            ? formatCurrency(Number(cashAmount))
-            : "";
-
-    }
-
-
-    // Calculate change
-    function calculateChange() {
-
+    // UPDATE ORDER DISPLAY
+    const render = () => {
         const total = getTotal();
-        const cash = Number(cashAmount) || 0;
+        const items = Object.entries(cart).filter(([, item]) => item.qty > 0);
 
-        if (!cashAmount) {
+        $("#order-total").textContent = money(total);
+        $("#pay-total").textContent = money(total);
 
-            changeInput.value = "";
-            return;
+        orderBody.classList.toggle("has-items", items.length > 0);
 
-        }
+        orderBody.innerHTML = items.length
+            ? items.map(([id, item]) => `
+                <div class="order-item" data-id="${id}">
+                    <div class="item-info">
+                        <strong>${item.name}</strong>
+                        <small>${money(item.price)} each</small>
+                    </div>
 
-        if (cash >= total) {
+                    <div class="item-bottom">
+                        <div class="quantity-controls">
+                            <button
+                                type="button"
+                                data-action="minus"
+                                aria-label="Decrease quantity"
+                            >−</button>
 
-            changeInput.value = formatCurrency(cash - total);
+                            <span>${item.qty}</span>
 
-        } else {
+                            <button
+                                type="button"
+                                data-action="plus"
+                                aria-label="Increase quantity"
+                            >+</button>
 
-            changeInput.value = "";
+                            <button
+                                type="button"
+                                data-action="remove"
+                                class="remove-item"
+                                aria-label="Remove item"
+                            >×</button>
+                        </div>
 
-        }
+                        <strong class="item-total">
+                            ${money(item.price * item.qty)}
+                        </strong>
+                    </div>
+                </div>
+            `).join("")
+            : '<p class="no-tx">No Transaction</p>';
 
-    }
+        $("#checkout-btn").disabled = items.length === 0;
+    };
 
+    // ADD PRODUCTS TO CART
+    cards.forEach((card, index) => {
+        const name = card.querySelector("h3")?.textContent.trim();
+        const price = Number(
+            card.querySelector(".price")?.textContent.replace(/[^\d.]/g, "")
+        );
 
-    // ==========================================
-    // ORDER CART
-    // ==========================================
+        if (!name || !Number.isFinite(price)) return;
 
-    const orderBody = document.querySelector(".order-body");
-    const subtotalEl = document.getElementById("order-subtotal");
-    const serviceEl = document.getElementById("order-service");
+        card.dataset.id = index;
 
-    const DISCOUNT_RATE = 0;     // 0%
-    const SERVICE_CHARGE = 0;    // flat ₱ amount
-    const PPN_RATE = 0.11;       // 11%
+        card.addEventListener("click", () => {
+            cart[index] ??= {
+                name,
+                price,
+                qty: 0
+            };
 
-    const items = {};            // id -> { id, name, price, stock, qty, card }
-
-    function toNumber(text) {
-        return Number(String(text).replace(/[^\d.]/g, "")) || 0;
-    }
-
-    function escapeHtml(str) {
-        const div = document.createElement("div");
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    // Read every menu card once and register it as an item
-    document.querySelectorAll(".menu-grid .card").forEach(function (card) {
-
-        const name = card.querySelector("h3").textContent.trim();
-        const id = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
-        items[id] = {
-            id: id,
-            name: name,
-            price: toNumber(card.querySelector(".price").textContent),
-            stock: parseInt(card.querySelector(".stock").textContent, 10) || 0,
-            qty: 0,
-            card: card
-        };
-
-        card.dataset.id = id;
-        card.tabIndex = 0;
-        card.setAttribute("role", "button");
-
+            cart[index].qty++;
+            render();
+        });
     });
 
-    function addItem(id) {
-        const item = items[id];
-        if (!item || item.qty >= item.stock) return;
-        item.qty++;
-        renderOrder();
-    }
+    // CART QUANTITY CONTROLS
+    orderBody.addEventListener("click", event => {
+        const button = event.target.closest("button");
+        if (!button) return;
 
-    function changeQty(id, delta) {
-        const item = items[id];
+        const row = button.closest("[data-id]");
+        if (!row) return;
+
+        const id = row.dataset.id;
+        const item = cart[id];
+
         if (!item) return;
-        item.qty = Math.max(0, Math.min(item.stock, item.qty + delta));
-        renderOrder();
-    }
 
-    function removeItem(id) {
-        if (!items[id]) return;
-        items[id].qty = 0;
-        renderOrder();
-    }
+        switch (button.dataset.action) {
+            case "plus":
+                item.qty++;
+                break;
 
-    function renderOrder() {
+            case "minus":
+                item.qty--;
+                break;
 
-        const ordered = Object.values(items).filter(function (i) { return i.qty > 0; });
-
-        // --- Update stock text on the menu cards ---
-        Object.values(items).forEach(function (item) {
-            const left = item.stock - item.qty;
-            const stockEl = item.card.querySelector(".stock");
-            stockEl.textContent = left > 0 ? left + " Bowls available" : "Sold out";
-            item.card.classList.toggle("sold-out", left === 0);
-        });
-
-        // --- Order list ---
-        if (ordered.length === 0) {
-
-            orderBody.classList.remove("has-items");
-            orderBody.innerHTML = '<p class="no-tx">No Transaction</p>';
-
-        } else {
-
-            orderBody.classList.add("has-items");
-            orderBody.innerHTML =
-                '<ul class="order-list">' +
-                ordered.map(function (item) {
-                    return (
-                        '<li class="order-row">' +
-                            '<div class="order-info">' +
-                                '<span class="order-name">' + escapeHtml(item.name) + '</span>' +
-                                '<span class="order-price">' + formatCurrency(item.price * item.qty) + '</span>' +
-                            '</div>' +
-                            '<div class="order-controls">' +
-                                '<button type="button" class="qty-btn" data-action="minus" data-id="' + item.id + '" aria-label="Decrease quantity">−</button>' +
-                                '<span class="qty">' + item.qty + '</span>' +
-                                '<button type="button" class="qty-btn" data-action="plus" data-id="' + item.id + '" aria-label="Increase quantity">+</button>' +
-                                '<button type="button" class="remove-btn" data-action="remove" data-id="' + item.id + '" aria-label="Remove ' + escapeHtml(item.name) + '">×</button>' +
-                            '</div>' +
-                        '</li>'
-                    );
-                }).join("") +
-                '</ul>';
-
+            case "remove":
+                item.qty = 0;
+                break;
         }
 
-        // --- Totals ---
-        const subtotal = ordered.reduce(function (sum, i) { return sum + i.price * i.qty; }, 0);
-        const service = subtotal > 0 ? SERVICE_CHARGE : 0;
-        const discounted = subtotal - subtotal * DISCOUNT_RATE + service;
-        const total = discounted * (1 + PPN_RATE);   // PPN added on top
-
-        subtotalEl.textContent = formatCurrency(subtotal);
-        serviceEl.textContent = formatCurrency(service);
-        orderTotal.textContent = formatCurrency(subtotal > 0 ? total : 0);
-
-    }
-
-    // Click a menu card to add it
-    document.querySelector(".menu-grid").addEventListener("click", function (event) {
-        const card = event.target.closest(".card");
-        if (card) addItem(card.dataset.id);
-    });
-
-    // Keyboard support (Enter / Space on a focused card)
-    document.querySelector(".menu-grid").addEventListener("keydown", function (event) {
-        if (event.key !== "Enter" && event.key !== " ") return;
-        const card = event.target.closest(".card");
-        if (card) {
-            event.preventDefault();
-            addItem(card.dataset.id);
+        if (item.qty <= 0) {
+            delete cart[id];
         }
+
+        render();
     });
 
-    // −, +, × buttons inside the order panel
-    orderBody.addEventListener("click", function (event) {
+    // PRODUCT SEARCH
+    $(".menu-panel .search input")?.addEventListener("input", event => {
+        const query = event.target.value.toLowerCase();
 
-        const btn = event.target.closest("button[data-action]");
-        if (!btn) return;
-
-        const id = btn.dataset.id;
-
-        if (btn.dataset.action === "plus") changeQty(id, 1);
-        else if (btn.dataset.action === "minus") changeQty(id, -1);
-        else if (btn.dataset.action === "remove") removeItem(id);
-
-    });
-
-
-    // ==========================================
-    // CATEGORY BUTTONS (ALL / PASTA / RICE BOWL / STARTERS)
-    // ==========================================
-
-    const categoryChips = document.querySelectorAll(".chips .chip");
-    const menuCards = document.querySelectorAll(".menu-grid .card");
-    const menuGrid = document.querySelector(".menu-grid");
-
-    const searchInput = document.querySelector(".search input");
-
-    let currentCategory = "all";
-
-    // "No results" message shown when nothing matches
-    const noResults = document.createElement("p");
-    noResults.className = "no-results";
-    noResults.textContent = "No items found";
-    noResults.hidden = true;
-    menuGrid.appendChild(noResults);
-
-    // Show only the cards that match BOTH the category and the search text
-    function applyFilters() {
-
-        const query = searchInput.value.trim().toLowerCase();
-        let visible = 0;
-
-        menuCards.forEach(function (card) {
-
-            const name = card.querySelector("h3").textContent.toLowerCase();
-
-            const matchesCategory =
-                currentCategory === "all" || card.dataset.category === currentCategory;
-            const matchesSearch = name.includes(query);
-
-            const show = matchesCategory && matchesSearch;
-            card.hidden = !show;
-
-            if (show) visible++;
-
+        cards.forEach(card => {
+            const name = card.querySelector("h3")?.textContent.toLowerCase() || "";
+            card.hidden = !name.includes(query);
         });
+    });
 
-        noResults.hidden = visible > 0;
+    // CATEGORY FILTER
+    $$(".chip").forEach(button => {
+        button.addEventListener("click", () => {
+            $$(".chip").forEach(chip => chip.classList.remove("active"));
+            button.classList.add("active");
 
-        // Jump back to the top of the list
-        menuGrid.scrollTop = 0;
-
-    }
-
-    categoryChips.forEach(function (chip) {
-
-        chip.addEventListener("click", function () {
-
-            categoryChips.forEach(function (c) {
-                c.classList.remove("active");
+            cards.forEach(card => {
+                card.hidden =
+                    button.dataset.category !== "all" &&
+                    card.dataset.category !== button.dataset.category;
             });
-
-            chip.classList.add("active");
-
-            currentCategory = chip.dataset.category;
-            applyFilters();
-
         });
-
     });
 
-    // Filter as the user types
-    searchInput.addEventListener("input", applyFilters);
-
-    // Pressing Enter shouldn't do anything unexpected
-    searchInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") event.preventDefault();
-    });
-
-
-    // ==========================================
-    // ORDER TYPE (DINE IN / TO GO)
-    // ==========================================
-
-    const orderTypeButtons = document.querySelectorAll(".toggle .seg");
-
-    orderTypeButtons.forEach(function (btn) {
-
-        btn.addEventListener("click", function () {
-
-            orderTypeButtons.forEach(function (b) {
-                b.classList.remove("active");
-            });
-
-            btn.classList.add("active");
-
+    // ORDER TYPE
+    $$(".toggle .seg").forEach(button => {
+        button.addEventListener("click", () => {
+            $$(".toggle .seg").forEach(seg => seg.classList.remove("active"));
+            button.classList.add("active");
         });
-
     });
 
+    // CHECKOUT
+    $("#checkout-btn").addEventListener("click", () => {
+        if (!Object.keys(cart).length) return;
 
-    // ==========================================
-    // CHECKOUT BUTTON
-    // ==========================================
-
-    checkoutBtn.addEventListener("click", function () {
-
-        const total = getTotal();
-
-        // Display total in Philippine Peso
-        payTotal.textContent = formatCurrency(total);
-
-        // Reset payment fields
-        cashAmount = "";
-        cashInput.value = "";
-        changeInput.value = "";
-        payMsg.textContent = "";
-
-        // Switch panels
         orderPanel.hidden = true;
         payPanel.hidden = false;
 
-    });
-
-
-    // ==========================================
-    // BACK BUTTON
-    // ==========================================
-
-    backBtn.addEventListener("click", function () {
-
-        // Return to order panel
-        payPanel.hidden = true;
-        orderPanel.hidden = false;
-
-        // Reset payment fields
-        cashAmount = "";
+        cash = "";
         cashInput.value = "";
         changeInput.value = "";
         payMsg.textContent = "";
 
+        payBtn.disabled = false;
+        payBtn.textContent = "Pay";
+
+        render();
     });
 
+    // BACK TO ORDER
+    $("#pay-back").addEventListener("click", () => {
+        if (paymentSaved) return;
 
-    // ==========================================
+        payPanel.hidden = true;
+        orderPanel.hidden = false;
+    });
+
     // NUMERIC KEYPAD
-    // ==========================================
+    $("#keypad").addEventListener("click", event => {
+        const key = event.target.closest("button")?.dataset.key;
 
-    keypad.addEventListener("click", function (event) {
+        if (!key || paymentSaved) return;
 
-        const button = event.target.closest("button[data-key]");
+        if (key === "back") {
+            cash = cash.slice(0, -1);
+        } else if (key !== "ok") {
+            cash += key;
+        }
 
-        if (!button) return;
+        cashInput.value = cash ? money(Number(cash)) : "";
 
-        const key = button.dataset.key;
+        const change = Number(cash) - getTotal();
+
+        changeInput.value = change >= 0
+            ? money(change)
+            : "";
 
         payMsg.textContent = "";
-
-
-        // BACKSPACE
-        if (key === "back") {
-
-            cashAmount = cashAmount.slice(0, -1);
-
-        }
-
-
-        // CONFIRM CASH
-        else if (key === "ok") {
-
-            const total = getTotal();
-            const cash = Number(cashAmount) || 0;
-
-            if (total === 0) {
-
-                payMsg.textContent = "No transaction to pay.";
-
-            } else if (cash < total) {
-
-                payMsg.textContent = "Insufficient cash amount.";
-
-            } else {
-
-                payMsg.textContent = "Cash amount confirmed.";
-
-            }
-
-        }
-
-
-        // NUMBER INPUT
-        else {
-
-            if (cashAmount.length < 12) {
-
-                if (cashAmount === "0") {
-
-                    cashAmount = key;
-
-                } else {
-
-                    cashAmount += key;
-
-                }
-
-            }
-
-        }
-
-
-        // Update displayed values
-        updateCash();
-        calculateChange();
-
     });
 
+    // PAYMENT SUCCESS MODAL
+    $("#success-ok").addEventListener("click", () => {
+        successModal.hidden = true;
 
-    // ==========================================
-    // PAY BUTTON
-    // ==========================================
+        Object.keys(cart).forEach(id => delete cart[id]);
 
-    payBtn.addEventListener("click", function () {
+        cash = "";
+        paymentSaved = false;
 
+        cashInput.value = "";
+        changeInput.value = "";
+        payMsg.textContent = "";
+
+        payBtn.disabled = false;
+        payBtn.textContent = "Pay";
+
+        payPanel.hidden = true;
+        orderPanel.hidden = false;
+
+        render();
+    });
+
+    // SAVE PAYMENT TO DJANGO
+    payBtn.addEventListener("click", async () => {
         const total = getTotal();
-        const cash = Number(cashAmount) || 0;
 
-
-        // Check if there is an order
-        if (total === 0) {
-
+        if (!Object.keys(cart).length) {
             payMsg.textContent = "No transaction to pay.";
             return;
-
         }
 
-
-        // Check if cash is sufficient
-        if (cashAmount === "" || cash < total) {
-
+        if (!cash || Number(cash) < total) {
             payMsg.textContent = "Insufficient cash amount.";
             return;
-
         }
 
+        const csrf = $('[name="csrfmiddlewaretoken"]')?.value;
+        const saveUrl = $(".page").dataset.saveUrl;
+        const orderType = $(".toggle .seg.active")?.dataset.orderType || "Walk-In";
 
-        // Calculate change
-        const change = cash - total;
+        payBtn.disabled = true;
+        payBtn.textContent = "Processing...";
 
+        try {
+            const response = await fetch(saveUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrf
+                },
+                body: JSON.stringify({
+                    items: Object.values(cart).map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.qty
+                    })),
+                    cash,
+                    order_type: orderType
+                })
+            });
 
-        // Display payment confirmation
-        payMsg.textContent =
-            "Payment validated! Change: " + formatCurrency(change);
+            const result = await response.json();
 
+            if (!response.ok) {
+                throw new Error(result.error || "Payment failed.");
+            }
 
-        // Database saving will be implemented later.
+            paymentSaved = true;
+            payBtn.textContent = "Paid";
+            successModal.hidden = false;
 
+        } catch (error) {
+            payMsg.textContent = error.message;
+            payBtn.disabled = false;
+            payBtn.textContent = "Pay";
+        }
     });
 
+    // INITIAL DISPLAY
+    render();
 });

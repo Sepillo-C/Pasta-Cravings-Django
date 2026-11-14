@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load static %}
 
@@ -16,7 +15,7 @@
 {% block content %}
 <main class="main">
 
-    <!-- TOP SEARCH BAR -->
+    <!-- SEARCH BAR -->
     <header class="topbar">
         <label class="search-box">
             <span class="search-icon">⌕</span>
@@ -34,40 +33,81 @@
                     <tr>
                         <th>Customer</th>
                         <th>ID</th>
+                        <th>Order Type</th>
                         <th>Menu</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
+                    {% for order in orders %}
                     <tr>
-                        <td>John Doe</td>
-                        <td>#215</td>
-                        <td>CREAMY TRUFFLE<br>₱105</td>
-                        <td>22 June 2026, 12:21 PM</td>
-                        <td><span class="status completed">COMPLETED</span></td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>#{{ order.id }}</td>
+
+                        <td>
+                            <span class="order-type {{ order.order_type|lower|slugify }}">
+                                {{ order.order_type }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {% for item in order.items.all %}
+                                {{ item.product_name }}<br>
+                                ₱{{ item.unit_price|floatformat:2 }} × {{ item.quantity }}
+                                {% if not forloop.last %}<br>{% endif %}
+                            {% empty %}
+                                No items
+                            {% endfor %}
+                        </td>
+
+                        <td>{{ order.order_date|date:"d F Y, g:i A" }}</td>
+
+                        <td>
+                            <span class="status {{ order.status|lower }}">
+                                {{ order.get_status_display|upper }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {% if order.status == "PREPARING" or order.status == "COMPLETED" %}
+                                <form class="status-form"
+                                      action="{% url 'toggle_order_status' order.id %}"
+                                      method="post">
+                                    {% csrf_token %}
+
+                                    <button type="submit" class="status-toggle">
+                                        {% if order.status == "PREPARING" %}
+                                            Mark Completed
+                                        {% else %}
+                                            Mark Preparing
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
                     </tr>
 
+                    {% empty %}
                     <tr>
-                        <td>Jane Doe</td>
-                        <td>#216</td>
-                        <td>CHICKEN ALA KING<br>₱95</td>
-                        <td>22 June 2026, 12:35 PM</td>
-                        <td><span class="status rejected">REJECTED</span></td>
+                        <td colspan="7" class="empty-orders">
+                            No orders found.
+                        </td>
                     </tr>
-
-                    <tr>
-                        <td>Alex Smith</td>
-                        <td>#217</td>
-                        <td>CHEESY POPPERS<br>₱95</td>
-                        <td>22 June 2026, 1:00 PM</td>
-                        <td><span class="status preparing">PREPARING</span></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </section>
 
 </main>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/orders.js' %}" defer></script>
 {% endblock %}

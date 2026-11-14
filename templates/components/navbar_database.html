@@ -27,12 +27,12 @@
             <span>DASHBOARD</span>
         </a>
 
-        <a href="{% url 'pos' %}" class="nav-link" title="POS">
+        <a href="{% url 'pos:pos' %}" class="nav-link">
             <img src="{% static 'icons/pos.png' %}" alt="">
             <span>POS</span>
         </a>
 
-        <a href="#" class="nav-link" title="Orders">
+        <a href="{% url 'orders' %}" class="nav-link" title="Orders">
             <img src="{% static 'icons/orders.png' %}" alt="">
             <span>ORDERS</span>
         </a>

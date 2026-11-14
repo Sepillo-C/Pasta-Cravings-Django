@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;600;800&family=Playfair+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/pos.css' %}">
 {% endblock %}
 
@@ -13,7 +14,20 @@
 {% endblock %}
 
 {% block content %}
-<main class="page">
+<!-- PAYMENT SUCCESS MODAL -->
+<div class="success-overlay" id="success-modal" hidden>
+    <div class="success-modal">
+        <img src="{% static 'icons/success.png' %}" alt="Payment Success">
+
+        <h3>Payment Success!</h3>
+
+        <button type="button" id="success-ok">OK</button>
+    </div>
+</div>
+
+
+<main class="page" data-save-url="{% url 'pos:save-order' %}">
+    {% csrf_token %}
 
   <!-- MENU PANEL -->
   <section class="panel menu-panel">
@@ -146,7 +160,7 @@
 
     <!-- ORDER TYPE -->
     <div class="toggle">
-      <button class="seg active">Dine In</button>
+      <button class="seg active">Walk-In</button>
       <button class="seg">To Go</button>
     </div>
 
@@ -156,34 +170,12 @@
     </div>
 
     <!-- ORDER TOTALS -->
-    <dl class="totals">
-
-      <div>
-        <dt>Subtotal</dt>
-        <dd id="order-subtotal">₱0.00</dd>
-      </div>
-
-      <div>
-        <dt>Discount</dt>
-        <dd>0%</dd>
-      </div>
-
-      <div>
-        <dt>Service Charge</dt>
-        <dd id="order-service">₱0.00</dd>
-      </div>
-
-      <div>
-        <dt>PPN</dt>
-        <dd>11%</dd>
-      </div>
-
+    <div class="totals">
       <div class="total">
         <dt>Total</dt>
         <dd id="order-total">₱0.00</dd>
       </div>
-
-    </dl>
+    </div>
 
     <button class="checkout" id="checkout-btn" type="button">
       Checkout
