@@ -7,16 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="{% static 'css/contact.css' %}">
 {% endblock %}
 
 {% block content %}
-
 <main class="contact-page">
 
     <section class="contact-info">
-
         <h1>CONTACT</h1>
 
         <div class="contact-detail">
@@ -40,12 +37,12 @@
             PLEASE CONTACT/MESSAGE US AT:
         </div>
 
-        <a href="https://www.instagram.com/_PASTACRAVINGS/" target="_blank" class="contact-detail social-link">
+        <a href="https://www.instagram.com/_PASTACRAVINGS/" target="_blank" rel="noopener noreferrer" class="contact-detail social-link">
             <img src="{% static 'icons/inst_contact.png' %}" alt="Instagram" class="contact-icon">
             <p>_PASTACRAVINGS</p>
         </a>
 
-        <a href="https://www.facebook.com/" target="_blank" class="contact-detail social-link">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" class="contact-detail social-link">
             <img src="{% static 'icons/mess_contact.png' %}" alt="Messenger" class="contact-icon">
             <p>PASTA CRAVINGS</p>
         </a>
@@ -57,14 +54,10 @@
                 0945 992 7194
             </p>
         </div>
-
     </section>
 
-
     <section class="contact-form-section">
-
         <form class="contact-form" method="POST">
-
             {% csrf_token %}
 
             <div class="form-group">
@@ -83,11 +76,8 @@
             </div>
 
             <button type="submit" class="send-btn">SEND</button>
-
         </form>
-
     </section>
 
 </main>
-
 {% endblock %}

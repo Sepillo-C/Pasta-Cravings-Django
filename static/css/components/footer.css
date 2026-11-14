@@ -1,18 +1,16 @@
 .site-footer {
-    width: 100%;
-    min-height: 75px;
-    padding: 12px 4%;
-    background: #A02E2F;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-
+    flex-shrink: 0;
+    width: 100%;
+    min-height: 75px;
+    padding: 12px 4%;
+    background: #A02E2F;
     font-family: "Montserrat", sans-serif;
 }
 
-/* Logo Text */
 .footer-logo {
     color: #fff;
     font-family: "Great Vibes", cursive;
@@ -21,7 +19,6 @@
     white-space: nowrap;
 }
 
-/* Contacts */
 .footer-contacts {
     display: flex;
     align-items: center;
@@ -33,7 +30,6 @@
     display: flex;
     align-items: center;
     gap: 9px;
-
     color: #fff;
     text-decoration: none;
     font-size: 13px;
@@ -53,22 +49,17 @@
     gap: 3px;
 }
 
-/* Hover */
 .footer-item:hover {
     opacity: .8;
 }
 
-.site-footer {
-    margin-top: 0;
-    padding: 22px 4% 12px;
-}
+/* RESPONSIVE */
 
-/* Responsive */
 @media (max-width: 750px) {
     .site-footer {
         flex-direction: column;
-        padding: 15px;
         gap: 15px;
+        padding: 15px;
     }
 
     .footer-logo {
