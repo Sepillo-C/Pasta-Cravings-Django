@@ -46,6 +46,16 @@
             <p class="value">8AM - 8PM</p>
         </article>
 
+        <article class="card stat">
+            <p class="label">Total Expenses</p>
+            <p class="value">₱{{ total_expenses|floatformat:2 }}</p>
+        </article>
+
+        <article class="card stat">
+            <p class="label">Net Income</p>
+            <p class="value">₱{{ net_income|floatformat:2 }}</p>
+        </article>
+
     </section>
 
     <!-- OVERVIEW AND TOP-SELLING -->
@@ -94,6 +104,48 @@
             <h2>Top-selling</h2>
             <ol id="topList"></ol>
         </aside>
+
+    </section>
+
+    <!-- RECENT EXPENSES -->
+    <section class="card recent-expenses">
+
+        <div class="recent-expenses-heading">
+            <h2>Recent Expenses</h2>
+            <a href="{% url 'expenses:expenses' %}">View All</a>
+        </div>
+
+        <div class="recent-expenses-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for expense in recent_expenses %}
+                    <tr>
+                        <td>{{ expense.expense_date|date:"M d, Y" }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td>{{ expense.get_category_display }}</td>
+                        <td class="expense-amount">
+                            ₱{{ expense.amount|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="no-expenses">
+                            No expense records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
     </section>
 
