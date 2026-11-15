@@ -15,7 +15,11 @@
 
 {% block content %}
 
-<div class="app">
+<div class="app"
+     id="inventoryApp"
+     data-api-url="{% url 'inventory_api' %}"
+     data-update-url="{% url 'inventory_update' 0 %}">
+
     <main id="inventory-records">
         <section class="records-panel">
 
@@ -31,7 +35,7 @@
                     <input
                         type="search"
                         id="inventorySearch"
-                        placeholder="Search by ID or product..."
+                        placeholder="Search by product..."
                     >
                 </label>
 
@@ -41,11 +45,7 @@
                     <option value="low">Low Stock</option>
                 </select>
 
-                <button
-                    class="add-button"
-                    id="openAddModalBtn"
-                    type="button"
-                >
+                <button class="add-button" id="openAddModalBtn" type="button">
                     + Add Item
                 </button>
             </div>
@@ -55,7 +55,6 @@
                     <table aria-label="Inventory records">
                         <thead>
                             <tr>
-                                <th>ID</th>
                                 <th>Product</th>
                                 <th>Stock</th>
                                 <th>Unit</th>
@@ -94,6 +93,7 @@
         <h2 id="inventoryModalTitle">Add Inventory Item</h2>
 
         <form id="addInventoryForm">
+            {% csrf_token %}
 
             <div class="form-group">
                 <label for="productName">Product Name:</label>
@@ -101,6 +101,7 @@
                     type="text"
                     id="productName"
                     name="product"
+                    maxlength="150"
                     placeholder="Enter product name"
                     required
                 >
@@ -161,8 +162,8 @@
                     Save Item
                 </button>
             </div>
-
         </form>
+
     </div>
 </div>
 
