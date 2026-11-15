@@ -1,0 +1,318 @@
+
+.records-panel {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #C2312A;
+    border-radius: 12px;
+}
+
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.inventory-header h1 {
+    margin: 0;
+    color: #A02E2F;
+    font: 800 25px "Montserrat", sans-serif;
+}
+
+.inventory-header p {
+    margin: 8px 0 0;
+    color: #777;
+    font: 400 12px "Montserrat", sans-serif;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.search-box input {
+    display: block;
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1.5px solid #A02E2F;
+    border-radius: 10px;
+    outline: none;
+    box-shadow: none;
+    appearance: none;
+    background: #fff;
+    font: 12px "Montserrat", sans-serif;
+}
+
+.status-filter {
+    width: 180px;
+    height: 44px;
+    flex-shrink: 0;
+    padding: 0 12px;
+    border: 1.5px solid #A02E2F;
+    border-radius: 10px;
+    background: #fff;
+    color: #333;
+    font: 12px "Montserrat", sans-serif;
+    cursor: pointer;
+}
+
+.add-button {
+    height: 44px;
+    padding: 0 18px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 8px;
+    background: #C2312A;
+    color: #fff;
+    font: 700 12px "Montserrat", sans-serif;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background: #8F2521;
+}
+
+.table-container {
+    width: 100%;
+    height: 328px;
+    overflow: hidden;
+}
+
+.table-scroll {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.records-panel table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+    font: 11px "Montserrat", sans-serif;
+}
+
+.records-panel th,
+.records-panel td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #F0A0A0;
+}
+
+.records-panel th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #C2312A;
+    color: #fff;
+    font-weight: 700;
+}
+
+.records-panel td {
+    color: #444;
+}
+
+.records-panel tbody tr:hover {
+    background: #FFF8F2;
+}
+
+.inventory-status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.inventory-status.available {
+    color: #236B3B;
+    background: #E5F5E9;
+}
+
+.inventory-status.low {
+    color: #9B2929;
+    background: #FBE5E5;
+}
+
+.edit-modal-btn {
+    padding: 7px 13px;
+    border: none;
+    border-radius: 6px;
+    background: #F5DCA5;
+    color: #79530D;
+    font: 700 10px "Montserrat", sans-serif;
+    cursor: pointer;
+}
+
+.edit-modal-btn:hover {
+    background: #EBCB82;
+}
+
+.empty-message {
+    padding: 25px 15px;
+    color: #888;
+    text-align: center;
+    font: 12px "Montserrat", sans-serif;
+}
+
+.low-stock-section {
+    margin-top: 25px;
+    padding: 18px 20px;
+    border-left: 5px solid #C2312A;
+    border-radius: 8px;
+    background: #FFF8F2;
+}
+
+.low-stock-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.low-stock-heading h2 {
+    margin: 0;
+    color: #A02E2F;
+    font: 700 16px "Montserrat", sans-serif;
+}
+
+.low-stock-label {
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #FBE5E5;
+    color: #9B2929;
+    font: 700 9px "Montserrat", sans-serif;
+}
+
+.low-stock-section ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.low-stock-section li {
+    padding: 5px 0;
+    color: #555;
+    font: 400 11px "Montserrat", sans-serif;
+}
+
+.inventory-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, .5);
+}
+
+.inventory-modal.show {
+    display: flex;
+}
+
+.inventory-modal-content {
+    width: 100%;
+    max-width: 450px;
+    padding: 28px;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.inventory-modal-content h2 {
+    margin: 0 0 22px;
+    color: #A02E2F;
+    font: 800 20px "Montserrat", sans-serif;
+}
+
+.inventory-modal .form-group {
+    margin-bottom: 16px;
+}
+
+.inventory-modal .form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #444;
+    font: 600 12px "Montserrat", sans-serif;
+}
+
+.inventory-modal .form-group input,
+.inventory-modal .form-group select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1.5px solid #DDD6D0;
+    border-radius: 8px;
+    background: #fff;
+    font: 12px "Montserrat", sans-serif;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.modal-actions button {
+    min-height: 40px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 7px;
+    font: 700 11px "Montserrat", sans-serif;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background: #eee;
+    color: #444;
+}
+
+.save-button {
+    background: #C2312A;
+    color: #fff;
+}
+
+@media (max-width: 700px) {
+    .app main {
+        padding: 15px;
+    }
+
+    .records-panel {
+        padding: 18px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex-basis: 100%;
+    }
+
+    .status-filter {
+        flex: 1;
+        width: auto;
+    }
+
+    .inventory-header {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+}
