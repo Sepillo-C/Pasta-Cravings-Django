@@ -18,39 +18,12 @@
 
 <main class="main">
 
-    <!-- TOP BAR -->
-    <header class="topbar">
-
-        <label class="search">
-            <img src="{% static 'icons/search.png' %}" alt="" class="icon search-icon">
-            <input type="search" placeholder="Search...">
-        </label>
-
-        <div class="top-actions">
-
-            <!-- MESSAGES -->
-            <button class="icon-button" type="button" aria-label="Messages">
-                <img src="{% static 'icons/mail.png' %}" alt="">
-            </button>
-
-            <!-- NOTIFICATIONS -->
-            <button class="icon-button" type="button" aria-label="Notifications">
-                <img src="{% static 'icons/notification.png' %}" alt="">
-            </button>
-
-        </div>
-    </header>
-
     <!-- PAGE HEADING -->
     <section class="page-heading">
         <h1 class="page-title">DASHBOARD</h1>
 
         <p class="page-date">
-            <img
-                src="{% static 'icons/calendar.png' %}"
-                alt=""
-                class="calendar-icon"
-            >
+            <img src="{% static 'icons/calendar.png' %}" alt="" class="calendar-icon">
             <span id="date"></span>
         </p>
     </section>
@@ -64,8 +37,8 @@
         </article>
 
         <article class="card stat">
-            <p class="label">Accepted Orders</p>
-            <p class="value" id="accepted">97%</p>
+            <p class="label">Total Orders</p>
+            <p class="value" id="totalOrders">0</p>
         </article>
 
         <article class="card stat">
@@ -78,28 +51,32 @@
     <!-- OVERVIEW AND TOP-SELLING -->
     <section class="lower">
 
-        <!-- OVERVIEW CHART -->
         <article class="card overview-card">
 
             <div class="overview-head">
                 <h2>Overview</h2>
 
-                <button class="range" type="button">
+                <div class="range-wrapper">
                     <img
                         src="{% static 'icons/calendar.png' %}"
                         alt=""
+                        class="range-calendar"
                     >
-                    <span>Week</span>
+
+                    <select class="range" id="chartRange" aria-label="Select chart range">
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">Last 6 Months</option>
+                    </select>
+
                     <img
                         src="{% static 'icons/arrow_drop_down_date.png' %}"
                         alt=""
                         class="range-arrow"
                     >
-                </button>
+                </div>
             </div>
 
             <div class="chart">
-
                 <div class="y-axis" id="yAxis"></div>
 
                 <div class="plot">
@@ -109,12 +86,10 @@
 
                     <div class="x-axis" id="xAxis"></div>
                 </div>
-
             </div>
 
         </article>
 
-        <!-- TOP-SELLING PRODUCTS -->
         <aside class="card top">
             <h2>Top-selling</h2>
             <ol id="topList"></ol>
@@ -123,6 +98,8 @@
     </section>
 
 </main>
+
+{{ dashboard_data|json_script:"dashboard-data" }}
 
 <script src="{% static 'js/dashboard.js' %}"></script>
 

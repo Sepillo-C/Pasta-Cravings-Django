@@ -1,79 +1,111 @@
-// Sample data for now.
-// We will replace this with data from the database later.
+const data = JSON.parse(
+    document.getElementById("dashboard-data").textContent
+);
 
-const data = {
-  revenue: null,
+// DATE
+document.getElementById("date").textContent =
+    new Date().toLocaleString("en-PH", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+    }) + " | Lucena City";
 
-  chart: [
-    { label: "Mon", value: 45 },
-    { label: "Tue", value: 30 },
-    { label: "Wed", value: 70 },
-    { label: "Thu", value: 88 },
-    { label: "Fri", value: 90 },
-    { label: "Sat", value: 80 },
-    { label: "Sun", value: 58 },
-  ],
+// CURRENCY
+const currency = amount =>
+    new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP",
+        maximumFractionDigits: 2
+    }).format(amount);
 
-  topSelling: [
-    "Cheesy Bacon Fries",
-    "Chicken Ala King",
-    "Cheesy Poppers",
-    "Orange Chicken",
-    "Hungarian Sausage",
-    "Lechon Kawali",
-    "Aglio Olio",
-    "Bolognese",
-    "Tuna Pesto",
-    "Creamy Truffle",
-  ],
-};
+// STATISTICS
+document.getElementById("revenue").textContent =
+    currency(data.revenue);
 
+document.getElementById("totalOrders").textContent =
+    data.total_orders.toLocaleString("en-PH");
 
+// CHART ELEMENTS
+const bars = document.getElementById("bars");
+const xAxis = document.getElementById("xAxis");
+const yAxis = document.getElementById("yAxis");
+const chartRange = document.getElementById("chartRange");
 
-const dateText = new Date().toLocaleString("en-US", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-});
+// RENDER CHART
+function renderChart(chartData) {
+    bars.innerHTML = "";
+    xAxis.innerHTML = "";
+    yAxis.innerHTML = "";
 
-document.getElementById("date").textContent = dateText + " | Lucena City";
+    const values = chartData.map(item => item.value);
+    const maxValue = Math.max(...values, 1);
 
+    const chartMax = Math.ceil(maxValue / 100) * 100 || 100;
 
+    chartData.forEach(item => {
+        const height = (item.value / chartMax) * 92;
 
-if (data.revenue != null) {
-  document.getElementById("revenue").textContent =
-    "₱" + data.revenue.toLocaleString();
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        bar.style.height = `${height}%`;
+        bar.title = `${item.date}: ${currency(item.value)}`;
+
+        bars.appendChild(bar);
+
+        const label = document.createElement("span");
+        label.textContent = item.label;
+        xAxis.appendChild(label);
+    });
+
+    // Y-AXIS LABELS
+    for (let i = 4; i >= 0; i--) {
+        const label = document.createElement("span");
+        const amount = (chartMax / 4) * i;
+
+        label.textContent = amount >= 1000
+            ? `₱${(amount / 1000).toFixed(1)}k`
+            : `₱${amount.toFixed(0)}`;
+
+        yAxis.appendChild(label);
+    }
 }
 
+// SWITCH BETWEEN WEEK AND MONTH
+function updateChart() {
+    if (chartRange.value === "month") {
+        renderChart(data.monthly_chart);
+    } else {
+        renderChart(data.chart);
+    }
+}
 
+chartRange.addEventListener("change", updateChart);
 
-const max = Math.max(...data.chart.map((item) => item.value));
+// INITIAL CHART
+updateChart();
 
+// TOP-SELLING PRODUCTS
+const topList = document.getElementById("topList");
 
-document.getElementById("bars").innerHTML = data.chart
-  .map((item) => {
-    const height = (item.value / max) * 92;
+if (data.top_selling.length) {
+    data.top_selling.forEach((product, index) => {
+        const item = document.createElement("li");
 
-    return `<div class="bar" style="height: ${height}%"></div>`;
-  })
-  .join("");
+        const rank = document.createElement("span");
+        rank.className = "rank";
+        rank.textContent = index + 1;
 
+        const name = document.createElement("span");
+        name.textContent =
+            `${product.product_name} — ${product.total_quantity} sold`;
 
-document.getElementById("xAxis").innerHTML = data.chart
-  .map((item) => `<span>${item.label}</span>`)
-  .join("");
-
-
-document.getElementById("yAxis").innerHTML = Array.from(
-  { length: 9 },
-  (_, i) => `<span>${Math.round(max * (1 - i / 9))}</span>`
-).join("");
-
-
-document.getElementById("topList").innerHTML = data.topSelling
-  .map((name, i) => {
-    return `<li><span class="rank">${i + 1}</span>${name}</li>`;
-  })
-  .join("");
+        item.append(rank, name);
+        topList.appendChild(item);
+    });
+} else {
+    const empty = document.createElement("li");
+    empty.textContent = "No sales recorded yet.";
+    topList.appendChild(empty);
+}
