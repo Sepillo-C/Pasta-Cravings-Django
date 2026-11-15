@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
@@ -7,10 +6,8 @@ from decimal import Decimal
 class Order(models.Model):
 
     class Status(models.TextChoices):
-        PENDING = "PENDING", "Pending"
         PREPARING = "PREPARING", "Preparing"
         COMPLETED = "COMPLETED", "Completed"
-        REJECTED = "REJECTED", "Rejected"
 
     customer_name = models.CharField(
         max_length=150,
@@ -22,7 +19,7 @@ class Order(models.Model):
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
-        default=Status.PENDING
+        default=Status.PREPARING
     )
 
     payment_method = models.CharField(

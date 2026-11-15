@@ -1,270 +1,205 @@
-// Helpers
-const $ = (id) => document.getElementById(id);
+document.addEventListener("DOMContentLoaded", () => {
+    const $ = id => document.getElementById(id);
+    const page = document.querySelector(".sales-reports-page");
 
-const peso = (number) =>
-    "₱" + number.toLocaleString("en-PH", {
+    const dailyURL = page.dataset.dailyUrl;
+    const monthlyURL = page.dataset.monthlyUrl;
+
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    let dailyData = null;
+    let monthlyData = null;
+
+    const peso = value => "₱" + Number(value || 0).toLocaleString("en-PH", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 
-const MONTHS = [
-    "January", "February", "March", "April",
-    "May", "June", "July", "August",
-    "September", "October", "November", "December"
-];
-
-let dailyData = null;
-let monthlyData = null;
-
-
-// Temporary deterministic placeholder data.
-// Replace this with real Django database data later.
-function seeded(seed) {
-    let value = seed % 2147483647;
-
-    if (value <= 0) {
-        value += 2147483646;
+    function showError(id, message = "") {
+        $(id).textContent = message;
+        $(id).hidden = !message;
     }
 
-    return () => {
-        value = (value * 16807) % 2147483647;
-        return value / 2147483647;
-    };
-}
+    async function fetchReport(url, errorId) {
+        try {
+            const response = await fetch(url);
 
+            if (!response.ok) {
+                throw new Error("Unable to load report data.");
+            }
 
-// Daily Sales Report
-function generateDaily() {
-    const date = $("daily-date").value;
-
-    if (!date) return;
-
-    const random = seeded(Number(date.replace(/-/g, "")));
-
-    const orders = Math.floor(30 + random() * 90);
-    const cancelled = Math.floor(random() * 8);
-
-    const gross = Math.round(
-        orders * (180 + random() * 220) * 100
-    ) / 100;
-
-    const discount = Math.round(
-        gross * (0.03 + random() * 0.07) * 100
-    ) / 100;
-
-    const net = gross - discount;
-
-    dailyData = {
-        date,
-        orders,
-        cancelled,
-        gross,
-        discount,
-        net
-    };
-
-    $("d-sales").textContent = peso(net);
-    $("d-orders").textContent = orders;
-    $("d-cancel").textContent = cancelled;
-    $("d-gross").textContent = peso(gross);
-    $("d-disc").textContent = "-" + peso(discount);
-    $("d-net").textContent = peso(net);
-}
-
-
-// Monthly Sales Report
-function setupMonthlyFilters() {
-    MONTHS.forEach((month, index) => {
-        $("m-month").add(new Option(month, index));
-    });
-
-    const currentYear = new Date().getFullYear();
-
-    for (let year = currentYear; year >= currentYear - 5; year--) {
-        $("m-year").add(new Option(year, year));
+            showError(errorId);
+            return await response.json();
+        } catch (error) {
+            showError(errorId, error.message);
+            return null;
+        }
     }
 
-    $("m-month").value = new Date().getMonth();
-    $("m-year").value = currentYear;
-}
+    async function loadDaily() {
+        const date = $("daily-date").value;
+        if (!date) return;
 
-function generateMonthly() {
-    const month = Number($("m-month").value);
-    const year = Number($("m-year").value);
+        const data = await fetchReport(
+            `${dailyURL}?date=${encodeURIComponent(date)}`,
+            "daily-error"
+        );
 
-    const random = seeded(year * 100 + month + 7);
+        if (!data) return;
+        dailyData = { date, ...data };
 
-    const weeks = [1, 2, 3, 4, 5].map(() =>
-        Math.round(15000 + random() * 45000)
-    );
+        $("d-sales").textContent = peso(data.total_sales);
+        $("d-orders").textContent = Number(data.total_orders).toLocaleString();
+        $("d-average").textContent = peso(data.average_order);
+        $("d-gross").textContent = peso(data.gross_sales);
+        $("d-tax").textContent = peso(data.tax);
+        $("d-service").textContent = peso(data.service_charge);
+        $("d-net").textContent = peso(data.total_sales);
+    }
 
-    const sales = weeks.reduce((total, value) => total + value, 0);
-    const orders = Math.floor(sales / (180 + random() * 60));
-    const expenses = Math.round(sales * (0.45 + random() * 0.2));
+    async function loadMonthly() {
+        const month = String(Number($("m-month").value) + 1).padStart(2, "0");
+        const year = $("m-year").value;
+        const selectedMonth = `${year}-${month}`;
 
-    monthlyData = {
-        month: MONTHS[month],
-        year,
-        weeks,
-        sales,
-        orders,
-        expenses
-    };
+        const data = await fetchReport(
+            `${monthlyURL}?month=${selectedMonth}`,
+            "monthly-error"
+        );
 
-    $("m-sales").textContent = peso(sales);
-    $("m-orders").textContent = orders.toLocaleString();
-    $("m-exp").textContent = peso(expenses);
+        if (!data) return;
+        monthlyData = { month: months[Number($("m-month").value)], year, ...data };
 
-    renderMonthlyChart(weeks);
-}
+        $("m-sales").textContent = peso(data.total_sales);
+        $("m-orders").textContent = Number(data.total_orders).toLocaleString();
+        $("m-average").textContent = peso(data.average_order);
 
-function renderMonthlyChart(weeks) {
-    const chart = $("m-chart");
+        renderChart(data.weeks);
+    }
 
-    chart.querySelectorAll(".report-bar").forEach((bar) => bar.remove());
+    function renderChart(weeks) {
+        const chart = $("m-chart");
+        chart.querySelectorAll(".report-bar").forEach(bar => bar.remove());
 
-    $("m-empty").hidden = true;
+        const empty = $("m-empty");
+        const max = Math.max(...weeks.map(week => Number(week.sales)), 0);
 
-    const maxSales = Math.max(...weeks);
+        if (max === 0) {
+            empty.textContent = "No sales recorded for this month.";
+            empty.hidden = false;
+            return;
+        }
 
-    weeks.forEach((sales, index) => {
-        const bar = document.createElement("div");
-        bar.className = "report-bar";
-        bar.style.height = "0%";
-        bar.title = `Week ${index + 1}: ${peso(sales)}`;
+        empty.hidden = true;
 
-        const label = document.createElement("span");
-        label.className = "report-bar-label";
-        label.textContent = `W${index + 1}`;
+        weeks.forEach(week => {
+            const sales = Number(week.sales);
+            const bar = document.createElement("div");
 
-        bar.appendChild(label);
-        chart.appendChild(bar);
+            bar.className = "report-bar";
+            bar.style.height = `${Math.max((sales / max) * 92, 2)}%`;
+            bar.title = `${week.label}: ${peso(sales)}`;
 
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                bar.style.height = `${(sales / maxSales) * 92}%`;
-            });
+            const label = document.createElement("span");
+            label.className = "report-bar-label";
+            label.textContent = week.label.replace("Week ", "W");
+
+            bar.appendChild(label);
+            chart.appendChild(bar);
         });
-    });
-}
-
-
-// CSV Export
-function downloadCSV(filename, rows) {
-    const csv = rows
-        .map((row) =>
-            row.map((value) => {
-                const text = String(value ?? "");
-                return `"${text.replace(/"/g, '""')}"`;
-            }).join(",")
-        )
-        .join("\r\n");
-
-    const blob = new Blob(["\uFEFF" + csv], {
-        type: "text/csv;charset=utf-8;"
-    });
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = filename;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-function exportDaily() {
-    if (!dailyData) {
-        generateDaily();
     }
 
-    if (!dailyData) return;
+    function setupFilters() {
+        months.forEach((month, index) => {
+            $("m-month").add(new Option(month, index));
+        });
 
-    const data = dailyData;
+        const currentYear = new Date().getFullYear();
 
-    downloadCSV(`daily-sales-${data.date}.csv`, [
-        ["Date", "Orders", "Cancelled", "Gross Sales", "Discounts", "Net Sales"],
-        [
-            data.date,
-            data.orders,
-            data.cancelled,
-            data.gross,
-            data.discount,
-            data.net
-        ]
-    ]);
-}
+        for (let year = currentYear; year >= currentYear - 5; year--) {
+            $("m-year").add(new Option(year, year));
+        }
 
-function exportMonthly() {
-    if (!monthlyData) {
-        generateMonthly();
+        $("m-month").value = new Date().getMonth();
+        $("m-year").value = currentYear;
+
+        $("daily-date").value = [
+            currentYear,
+            String(new Date().getMonth() + 1).padStart(2, "0"),
+            String(new Date().getDate()).padStart(2, "0")
+        ].join("-");
     }
 
-    if (!monthlyData) return;
+    function downloadCSV(filename, rows) {
+        const csv = rows.map(row =>
+            row.map(value => `"${String(value ?? "").replace(/"/g, '""')}"`).join(",")
+        ).join("\r\n");
 
-    const data = monthlyData;
+        const blob = new Blob(["\uFEFF" + csv], {
+            type: "text/csv;charset=utf-8;"
+        });
 
-    downloadCSV(`monthly-sales-${data.month}-${data.year}.csv`, [
-        ["Week", "Sales"],
-        ...data.weeks.map((sales, index) => [`Week ${index + 1}`, sales]),
-        [],
-        ["Total Sales", data.sales],
-        ["Total Orders", data.orders],
-        ["Total Expenses", data.expenses]
-    ]);
-}
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
 
+        link.href = url;
+        link.download = filename;
+        link.click();
 
-// Print one report at a time
-function printReport(reportId) {
-    const otherId = reportId === "daily" ? "monthly" : "daily";
-    const otherPanel = $(otherId);
-    const previousDisplay = otherPanel.style.display;
+        URL.revokeObjectURL(url);
+    }
 
-    otherPanel.style.display = "none";
+    function exportDaily() {
+        if (!dailyData) return;
 
-    window.print();
+        const data = dailyData;
 
-    otherPanel.style.display = previousDisplay;
-}
+        downloadCSV(`daily-sales-${data.date}.csv`, [
+            ["Date", "Total Sales", "Gross Sales", "Tax", "Service Charge", "Orders", "Average Order"],
+            [data.date, data.total_sales, data.gross_sales, data.tax,
+                data.service_charge, data.total_orders, data.average_order]
+        ]);
+    }
 
+    function exportMonthly() {
+        if (!monthlyData) return;
 
-// Initialize after the HTML loads
-function initializeReports() {
-    const date = new Date();
+        const data = monthlyData;
 
-    // Set today's local date.
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+        downloadCSV(`monthly-sales-${data.month}-${data.year}.csv`, [
+            ["Month", "Total Sales", "Orders", "Average Order"],
+            [data.month + " " + data.year, data.total_sales,
+                data.total_orders, data.average_order],
+            [],
+            ["Week", "Sales"],
+            ...data.weeks.map(week => [week.label, week.sales])
+        ]);
+    }
 
-    $("daily-date").value = `${year}-${month}-${day}`;
+    function printReport(id) {
+        const other = $(id === "daily" ? "monthly" : "daily");
+        const previous = other.style.display;
 
-    // Set monthly filters.
-    setupMonthlyFilters();
+        other.style.display = "none";
+        window.print();
+        other.style.display = previous;
+    }
 
-    // Automatically generate reports on initial page load.
-    generateDaily();
-    generateMonthly();
+    setupFilters();
 
-    // Automatically update daily report when date changes.
-    $("daily-date").addEventListener("change", generateDaily);
+    $("daily-date").addEventListener("change", loadDaily);
+    $("m-month").addEventListener("change", loadMonthly);
+    $("m-year").addEventListener("change", loadMonthly);
 
-    // Automatically update monthly report when month or year changes.
-    $("m-month").addEventListener("change", generateMonthly);
-    $("m-year").addEventListener("change", generateMonthly);
-
-    // Export buttons.
     $("daily-export").addEventListener("click", exportDaily);
     $("monthly-export").addEventListener("click", exportMonthly);
 
-    // Print buttons.
     $("daily-print").addEventListener("click", () => printReport("daily"));
     $("monthly-print").addEventListener("click", () => printReport("monthly"));
-}
 
-initializeReports();
+    loadDaily();
+    loadMonthly();
+});

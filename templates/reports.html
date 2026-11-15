@@ -17,11 +17,12 @@
 
 {% block content %}
 
-<main class="sales-reports-page">
+<main class="sales-reports-page"
+      data-daily-url="{% url 'daily_report' %}"
+      data-monthly-url="{% url 'monthly_report' %}">
 
-    <!-- DAILY SALES REPORT -->
-    <section class="report-panel" id="daily" aria-labelledby="daily-title">
-        <h1 id="daily-title">Daily Sales Report</h1>
+    <section class="report-panel" id="daily">
+        <h1>Daily Sales Report</h1>
 
         <div class="report-row report-controls">
             <input type="date" id="daily-date" aria-label="Report date">
@@ -30,17 +31,17 @@
         <div class="report-stats">
             <div class="report-stat">
                 <span>Total Sales</span>
-                <strong id="d-sales">—</strong>
+                <strong id="d-sales">₱0.00</strong>
             </div>
 
             <div class="report-stat">
                 <span>Orders</span>
-                <strong id="d-orders">—</strong>
+                <strong id="d-orders">0</strong>
             </div>
 
             <div class="report-stat">
-                <span>Cancelled</span>
-                <strong id="d-cancel">—</strong>
+                <span>Average Order</span>
+                <strong id="d-average">₱0.00</strong>
             </div>
         </div>
 
@@ -48,28 +49,35 @@
             <h2>Sales Summary</h2>
 
             <div class="report-line">
-                <span>Total Gross Sales</span>
-                <span id="d-gross">—</span>
+                <span>Gross Sales</span>
+                <span id="d-gross">₱0.00</span>
             </div>
 
             <div class="report-line">
-                <span>Less: Discounts</span>
-                <span id="d-disc">—</span>
+                <span>Tax (PPN)</span>
+                <span id="d-tax">₱0.00</span>
+            </div>
+
+            <div class="report-line">
+                <span>Service Charge</span>
+                <span id="d-service">₱0.00</span>
             </div>
 
             <div class="report-line net">
-                <span>Net Sales</span>
-                <span id="d-net">—</span>
+                <span>Total Sales</span>
+                <span id="d-net">₱0.00</span>
             </div>
         </div>
 
+        <p class="report-error" id="daily-error" hidden></p>
+
         <div class="report-actions">
-            <button class="report-btn outline" id="daily-print">
+            <button class="report-btn outline" id="daily-print" type="button">
                 <img src="{% static 'icons/print.png' %}" alt="">
                 <span>Print</span>
             </button>
 
-            <button class="report-btn outline" id="daily-export">
+            <button class="report-btn outline" id="daily-export" type="button">
                 <img src="{% static 'icons/export.png' %}" alt="">
                 <span>Export</span>
             </button>
@@ -77,9 +85,8 @@
     </section>
 
 
-    <!-- MONTHLY SALES REPORT -->
-    <section class="report-panel" id="monthly" aria-labelledby="monthly-title">
-        <h1 id="monthly-title">Monthly Sales Report</h1>
+    <section class="report-panel" id="monthly">
+        <h1>Monthly Sales Report</h1>
 
         <div class="report-row report-controls">
             <select id="m-month" aria-label="Month"></select>
@@ -89,17 +96,17 @@
         <div class="report-stats">
             <div class="report-stat">
                 <span>Total Sales</span>
-                <strong id="m-sales">—</strong>
+                <strong id="m-sales">₱0.00</strong>
             </div>
 
             <div class="report-stat">
                 <span>Total Orders</span>
-                <strong id="m-orders">—</strong>
+                <strong id="m-orders">0</strong>
             </div>
 
             <div class="report-stat">
-                <span>Total Expenses</span>
-                <strong id="m-exp">—</strong>
+                <span>Average Order</span>
+                <strong id="m-average">₱0.00</strong>
             </div>
         </div>
 
@@ -114,13 +121,15 @@
             </div>
         </div>
 
+        <p class="report-error" id="monthly-error" hidden></p>
+
         <div class="report-actions">
-            <button class="report-btn outline" id="monthly-print">
+            <button class="report-btn outline" id="monthly-print" type="button">
                 <img src="{% static 'icons/print.png' %}" alt="">
                 <span>Print</span>
             </button>
 
-            <button class="report-btn outline" id="monthly-export">
+            <button class="report-btn outline" id="monthly-export" type="button">
                 <img src="{% static 'icons/export.png' %}" alt="">
                 <span>Export</span>
             </button>

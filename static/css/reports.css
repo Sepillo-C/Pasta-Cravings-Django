@@ -331,3 +331,14 @@ body:has(.sidebar.pinned) .sales-reports-page {
         break-inside: avoid;
     }
 }
+
+.report-error {
+    margin: 0;
+    color: #A02E2F;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.report-error[hidden] {
+    display: none;
+}

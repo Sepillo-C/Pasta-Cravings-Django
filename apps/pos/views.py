@@ -1,4 +1,3 @@
-
 import json
 
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
@@ -7,6 +6,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 from apps.orders.models import Order, OrderItem
 
@@ -14,11 +14,11 @@ from apps.orders.models import Order, OrderItem
 PPN_RATE = Decimal("0.11")
 SERVICE_CHARGE = Decimal("0.00")
 
-
+@login_required
 def pos_view(request):
     return render(request, "pos.html")
 
-
+@login_required
 @require_POST
 def save_order(request):
     try:
