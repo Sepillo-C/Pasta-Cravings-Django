@@ -8,12 +8,16 @@ from django.utils import timezone
 from apps.accounts.views import admin_required
 from apps.orders.models import Order, OrderItem
 from apps.expenses.models import Expense
+from apps.system_settings.models import CompanySettings
 
 
 @admin_required
 def dashboard_view(request):
     today = timezone.localdate()
     start_date = today - timedelta(days=6)
+
+    # COMPANY SETTINGS
+    company_settings = CompanySettings.objects.filter(pk=1).first()
 
     # OVERALL SALES STATISTICS
     totals = Order.objects.aggregate(
@@ -22,27 +26,27 @@ def dashboard_view(request):
     )
 
     total_revenue = totals["revenue"] or Decimal("0.00")
+    total_orders = totals["orders"]
 
     # EXPENSE STATISTICS
-    expense_totals = Expense.objects.aggregate(
-        total=Sum("amount"),
+    total_expenses = (
+        Expense.objects.aggregate(total=Sum("amount"))["total"]
+        or Decimal("0.00")
     )
 
-    total_expenses = expense_totals["total"] or Decimal("0.00")
     net_income = total_revenue - total_expenses
 
-    # RECENT EXPENSES
     recent_expenses = Expense.objects.order_by(
         "-expense_date", "-id"
     )[:5]
 
-    # PREPARE THE LAST 7 DAYS
+    # PREPARE LAST 7 DAYS
     daily_sales = {
         start_date + timedelta(days=i): Decimal("0.00")
         for i in range(7)
     }
 
-    # PREPARE THE LAST 6 MONTHS
+    # PREPARE LAST 6 MONTHS
     months = []
 
     for i in range(5, -1, -1):
@@ -63,7 +67,7 @@ def dashboard_view(request):
         day=1,
     )
 
-    # FETCH ORDERS ONCE FOR BOTH CHARTS
+    # FETCH ORDERS FOR BOTH CHARTS
     orders = Order.objects.filter(
         order_date__date__range=(monthly_start, today)
     ).values("order_date", "subtotal")
@@ -113,7 +117,9 @@ def dashboard_view(request):
 
     dashboard_data = {
         "revenue": float(total_revenue),
-        "total_orders": totals["orders"],
+        "total_orders": total_orders,
+        "total_expenses": float(total_expenses),
+        "net_income": float(net_income),
         "chart": chart_data,
         "monthly_chart": monthly_chart_data,
         "top_selling": list(top_selling),
@@ -121,7 +127,6 @@ def dashboard_view(request):
 
     return render(request, "dashboard.html", {
         "dashboard_data": dashboard_data,
-        "total_expenses": total_expenses,
-        "net_income": net_income,
+        "company_settings": company_settings,
         "recent_expenses": recent_expenses,
     })

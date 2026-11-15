@@ -68,6 +68,13 @@ body:has(.sidebar.pinned) .main {
     object-fit: contain;
 }
 
+.company-name {
+    margin-top: 5px;
+    color: var(--red);
+    font-size: 16px;
+    font-weight: 600;
+}
+
 /* CARDS */
 
 .card {
