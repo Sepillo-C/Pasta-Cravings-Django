@@ -1,27 +1,44 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import user_passes_test
 from .forms import LoginForm
 
 
+def admin_required(view_func):
+    return user_passes_test(
+        lambda user: user.is_superuser,
+        login_url="pos:pos"
+    )(view_func)
+
+
 def login_view(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect("dashboard")
+        return redirect("pos:pos")
+
     if request.method == "POST":
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            email = form.cleaned_data["email"]
+            username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
 
             user = authenticate(
                 request,
-                username=email,
+                username=username,
                 password=password
             )
 
             if user is not None:
                 login(request, user)
-                return redirect("dashboard")
 
-            form.add_error(None, "Invalid email or password.")
+                if user.is_superuser:
+                    return redirect("dashboard")
+
+                return redirect("pos:pos")
+
+            form.add_error(None, "Invalid username or password.")
     else:
         form = LoginForm()
 

@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     "apps.products.apps.ProductsConfig",
     "apps.reports.apps.ReportsConfig",
     "apps.system_settings.apps.SystemSettingsConfig",
-    "apps.transactions.apps.TransactionsConfig",
 ]
 
 MIDDLEWARE = [

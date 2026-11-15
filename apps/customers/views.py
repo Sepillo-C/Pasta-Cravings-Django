@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from apps.accounts.views import admin_required
 from .models import Customer
 from .forms import CustomerForm
 
 
-@login_required
+@admin_required
 def customer_view(request):
     customers_list = Customer.objects.all()
 
@@ -16,7 +16,7 @@ def customer_view(request):
     return render(request, "customer_records.html", context)
 
 
-@login_required
+@admin_required
 def add_customer_view(request):
     if request.method == "POST":
         form = CustomerForm(request.POST)
@@ -35,7 +35,7 @@ def add_customer_view(request):
     return redirect("customer")
 
 
-@login_required
+@admin_required
 def edit_customer_view(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
 

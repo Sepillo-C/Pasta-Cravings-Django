@@ -1,7 +1,7 @@
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from apps.accounts.views import admin_required
 
 
-@login_required
+@admin_required
 def dashboard_view(request):
     return render(request, "dashboard.html")
