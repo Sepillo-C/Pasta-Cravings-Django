@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Expense Records - Pasta Cravings{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/expenses.css' %}">
+{% endblock %}
+
+{% block navbar %}
+{% include "components/navbar_database.html" %}
+{% endblock %}
+
+{% block content %}
+<main class="expenses-page">
+
+    <header class="expenses-header">
+        <h1>Expense Records</h1>
+        <p>Manage and monitor your business expenses.</p>
+    </header>
+
+    <form method="GET" class="expense-filters">
+        <div class="filter-group">
+            <label for="dateFrom">From</label>
+            <input type="date" id="dateFrom" name="from" value="{{ date_from }}">
+        </div>
+
+        <div class="filter-group">
+            <label for="dateTo">To</label>
+            <input type="date" id="dateTo" name="to" value="{{ date_to }}">
+        </div>
+
+        <div class="filter-group">
+            <label for="categoryFilter">Category</label>
+            <select name="category" id="categoryFilter">
+                <option value="All">All Categories</option>
+                {% for value, label in categories %}
+                <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="filter-button">Filter</button>
+        <a href="{% url 'expenses:expenses' %}" class="reset-button">Reset</a>
+
+        <button type="button" class="add-expense-button" id="addExpenseButton">
+            + Add Expense
+        </button>
+    </form>
+
+    <section class="records-panel">
+        <div class="records-heading">
+            <h2>Expense List</h2>
+            <span>{{ expenses|length }} Records</span>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Expense Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td class="expense-id">E{{ expense.id|stringformat:"03d" }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td><span class="category-label">{{ expense.get_category_display }}</span></td>
+                        <td class="expense-amount">₱{{ expense.amount|floatformat:2 }}</td>
+                        <td>{{ expense.expense_date|date:"M d, Y" }}</td>
+                        <td class="action-buttons">
+                            <button type="button" class="edit-button"
+                                data-id="{{ expense.id }}"
+                                data-description="{{ expense.description }}"
+                                data-category="{{ expense.category }}"
+                                data-amount="{{ expense.amount }}"
+                                data-date="{{ expense.expense_date|date:'Y-m-d' }}">
+                                Edit
+                            </button>
+
+                            <form method="POST" class="delete-expense-form"
+                                onsubmit="return confirm('Delete this expense? This cannot be undone.');">
+                                {% csrf_token %}
+                                <input type="hidden" name="expense_id" value="{{ expense.id }}">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-message">No expense records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="expenses-total">
+            <span>TOTAL EXPENSES</span>
+            <strong>₱{{ total_expenses|floatformat:2 }}</strong>
+        </div>
+    </section>
+</main>
+
+<div class="expense-modal {% if show_modal %}show{% endif %}" id="expenseModal">
+    <div class="expense-modal-content">
+        <div class="modal-header">
+            <div>
+                <h2 id="modalTitle">{% if editing_expense %}Edit Expense{% else %}Add Expense{% endif %}</h2>
+                <p>Enter the expense information below.</p>
+            </div>
+            <button type="button" class="close-modal" id="closeExpenseModal">&times;</button>
+        </div>
+
+        <form method="POST" id="expenseForm">
+            {% csrf_token %}
+            <input type="hidden" name="expense_id" id="expenseId"
+                value="{% if editing_expense %}{{ editing_expense.id }}{% endif %}">
+
+            {% if form.non_field_errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Description</label>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}">Category</label>
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.amount.id_for_label }}">Amount (₱)</label>
+                {{ form.amount }}
+                {{ form.amount.errors }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.expense_date.id_for_label }}">Expense Date</label>
+                {{ form.expense_date }}
+                {{ form.expense_date.errors }}
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-button" id="cancelExpenseModal">Cancel</button>
+                <button type="submit" class="save-button">Save Expense</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="{% static 'js/expenses.js' %}" defer></script>
+{% endblock %}
