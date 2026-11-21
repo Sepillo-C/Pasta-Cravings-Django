@@ -17,9 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const keypad = $("#keypad");
     const page = $(".page");
 
-    if (!cards.length || !orderBody || !orderPanel || !payPanel ||
-        !cashInput || !changeInput || !payMsg || !payBtn ||
-        !successModal || !checkoutBtn || !keypad || !page) {
+    if (
+        !orderBody || !orderPanel || !payPanel ||
+        !cashInput || !changeInput || !payMsg ||
+        !payBtn || !successModal || !checkoutBtn ||
+        !keypad || !page
+    ) {
         return;
     }
 
@@ -28,38 +31,53 @@ document.addEventListener("DOMContentLoaded", () => {
     let activeCategory = "all";
     let searchQuery = "";
 
-    // Store money as integer centavos to avoid floating-point errors.
     const money = cents => `₱${(cents / 100).toFixed(2)}`;
+
     const centsToDecimal = cents => (cents / 100).toFixed(2);
 
     const toCents = value => {
         const cleaned = String(value).replace(/[^\d.]/g, "");
         const [whole = "0", decimal = ""] = cleaned.split(".");
-        const pesos = Number.parseInt(whole || "0", 10);
-        const centavos = Number.parseInt((decimal + "00").slice(0, 2), 10);
 
-        return (Number.isFinite(pesos) ? pesos : 0) * 100 +
-            (Number.isFinite(centavos) ? centavos : 0);
+        const pesos = Number.parseInt(whole || "0", 10);
+        const centavos = Number.parseInt(
+            (decimal + "00").slice(0, 2),
+            10
+        );
+
+        return (
+            (Number.isFinite(pesos) ? pesos : 0) * 100 +
+            (Number.isFinite(centavos) ? centavos : 0)
+        );
     };
 
     const cashToCents = value => {
         if (!value) return 0;
 
         const [whole = "0", decimal = ""] = String(value).split(".");
-        const pesos = Number.parseInt(whole || "0", 10);
-        const centavos = Number.parseInt((decimal + "00").slice(0, 2), 10);
 
-        return (Number.isFinite(pesos) ? pesos : 0) * 100 +
-            (Number.isFinite(centavos) ? centavos : 0);
+        const pesos = Number.parseInt(whole || "0", 10);
+        const centavos = Number.parseInt(
+            (decimal + "00").slice(0, 2),
+            10
+        );
+
+        return (
+            (Number.isFinite(pesos) ? pesos : 0) * 100 +
+            (Number.isFinite(centavos) ? centavos : 0)
+        );
     };
 
-    const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[character]);
+    const escapeHTML = value => String(value).replace(
+        /[&<>"']/g,
+        character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]
+    );
 
     const getTotal = () => Object.values(cart).reduce(
         (sum, item) => sum + item.price * item.qty,
@@ -70,29 +88,34 @@ document.addEventListener("DOMContentLoaded", () => {
         ([, item]) => item.qty > 0
     );
 
-    // Search and category filters work together.
+    // Search and category filters.
     const filterProducts = () => {
         let visibleCount = 0;
 
         cards.forEach(card => {
-            const name = card.querySelector("h3")?.textContent.trim().toLowerCase() || "";
-            const matchesCategory = activeCategory === "all" ||
+            const name = card.querySelector("h3")
+                ?.textContent.trim().toLowerCase() || "";
+
+            const matchesCategory =
+                activeCategory === "all" ||
                 card.dataset.category === activeCategory;
+
             const matchesSearch = name.includes(searchQuery);
             const visible = matchesCategory && matchesSearch;
 
             card.hidden = !visible;
+
             if (visible) visibleCount++;
         });
 
         let noResults = $(".menu-grid .no-results");
 
-        if (!noResults) {
+        if (!noResults && cards.length > 0) {
             noResults = document.createElement("p");
             noResults.className = "no-results";
             noResults.textContent = "No products found.";
             noResults.hidden = true;
-            $(".menu-grid")?.append(noResults);
+            $(".menu-grid").append(noResults);
         }
 
         if (noResults) {
@@ -100,14 +123,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Update cash and change display.
     const updatePaymentDisplay = () => {
         const enteredCash = cashToCents(cash);
         const change = enteredCash - getTotal();
 
         cashInput.value = cash ? money(enteredCash) : "";
-        changeInput.value = cash && change >= 0 ? money(change) : "";
+
+        changeInput.value = cash && change >= 0
+            ? money(change)
+            : "";
     };
 
+    // Render the order cart.
     const render = () => {
         const total = getTotal();
         const items = getItems();
@@ -115,7 +143,10 @@ document.addEventListener("DOMContentLoaded", () => {
         $("#order-total").textContent = money(total);
         $("#pay-total").textContent = money(total);
 
-        orderBody.classList.toggle("has-items", items.length > 0);
+        orderBody.classList.toggle(
+            "has-items",
+            items.length > 0
+        );
 
         orderBody.innerHTML = items.length
             ? items.map(([id, item]) => `
@@ -127,36 +158,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <div class="item-bottom">
                         <div class="quantity-controls">
-                            <button type="button" data-action="minus" aria-label="Decrease quantity">−</button>
+                            <button
+                                type="button"
+                                data-action="minus"
+                                aria-label="Decrease quantity"
+                            >−</button>
+
                             <span>${item.qty}</span>
-                            <button type="button" data-action="plus" aria-label="Increase quantity">+</button>
-                            <button type="button" data-action="remove" class="remove-item" aria-label="Remove item">×</button>
+
+                            <button
+                                type="button"
+                                data-action="plus"
+                                aria-label="Increase quantity"
+                            >+</button>
+
+                            <button
+                                type="button"
+                                data-action="remove"
+                                class="remove-item"
+                                aria-label="Remove item"
+                            >×</button>
                         </div>
 
-                        <strong class="item-total">${money(item.price * item.qty)}</strong>
+                        <strong class="item-total">
+                            ${money(item.price * item.qty)}
+                        </strong>
                     </div>
                 </div>
             `).join("")
             : '<p class="no-tx">No Transaction</p>';
 
         checkoutBtn.disabled = items.length === 0;
+
         updatePaymentDisplay();
     };
 
-    // Add menu products to the cart.
-    cards.forEach((card, index) => {
+    // Add database products to cart.
+    cards.forEach(card => {
+        const id = card.dataset.productId;
         const name = card.querySelector("h3")?.textContent.trim();
-        const price = toCents(card.querySelector(".price")?.textContent || "0");
 
-        if (!name || price < 0) return;
+        const price = toCents(
+            card.querySelector(".price")?.textContent || "0"
+        );
 
-        card.dataset.id = String(index);
+        if (!id || !name) return;
 
         card.addEventListener("click", () => {
-            if (card.classList.contains("sold-out")) return;
+            if (paymentSaved) return;
 
-            cart[index] ??= { name, price, qty: 0 };
-            cart[index].qty++;
+            cart[id] ??= {
+                name,
+                price,
+                qty: 0
+            };
+
+            cart[id].qty++;
 
             render();
         });
@@ -164,17 +221,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Cart quantity controls.
     orderBody.addEventListener("click", event => {
-        const button = event.target.closest("button[data-action]");
-        if (!button) return;
+        const button = event.target.closest(
+            "button[data-action]"
+        );
+
+        if (!button || paymentSaved) return;
 
         const row = button.closest("[data-id]");
         const item = row ? cart[row.dataset.id] : null;
 
         if (!item) return;
 
-        if (button.dataset.action === "plus") item.qty++;
-        if (button.dataset.action === "minus") item.qty--;
-        if (button.dataset.action === "remove") item.qty = 0;
+        if (button.dataset.action === "plus") {
+            item.qty++;
+        }
+
+        if (button.dataset.action === "minus") {
+            item.qty--;
+        }
+
+        if (button.dataset.action === "remove") {
+            item.qty = 0;
+        }
 
         if (item.qty <= 0) {
             delete cart[row.dataset.id];
@@ -184,18 +252,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Product search.
-    $(".menu-panel .search input")?.addEventListener("input", event => {
-        searchQuery = event.target.value.trim().toLowerCase();
-        filterProducts();
-    });
+    $(".menu-panel .search input")?.addEventListener(
+        "input",
+        event => {
+            searchQuery = event.target.value
+                .trim()
+                .toLowerCase();
+
+            filterProducts();
+        }
+    );
 
     // Category filter.
     $$(".chip").forEach(button => {
         button.addEventListener("click", () => {
-            $$(".chip").forEach(chip => chip.classList.remove("active"));
+            $$(".chip").forEach(chip => {
+                chip.classList.remove("active");
+            });
 
             button.classList.add("active");
-            activeCategory = button.dataset.category || "all";
+
+            activeCategory = (
+                button.dataset.category || "all"
+            ).trim().toLowerCase();
 
             filterProducts();
         });
@@ -204,7 +283,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Order type selection.
     $$(".toggle .seg").forEach(button => {
         button.addEventListener("click", () => {
-            $$(".toggle .seg").forEach(seg => seg.classList.remove("active"));
+            $$(".toggle .seg").forEach(seg => {
+                seg.classList.remove("active");
+            });
+
             button.classList.add("active");
         });
     });
@@ -229,7 +311,7 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
     });
 
-    // Return to the order panel before payment is saved.
+    // Return to order panel.
     $("#pay-back")?.addEventListener("click", () => {
         if (paymentSaved) return;
 
@@ -251,7 +333,12 @@ document.addEventListener("DOMContentLoaded", () => {
             cash = cash || "0";
             cash += ".";
         } else if (/^\d+$/.test(key)) {
-            if (cash.includes(".") && cash.split(".")[1].length >= 2) return;
+            if (
+                cash.includes(".") &&
+                cash.split(".")[1].length >= 2
+            ) {
+                return;
+            }
 
             cash += key;
         } else {
@@ -262,11 +349,13 @@ document.addEventListener("DOMContentLoaded", () => {
         payMsg.textContent = "";
     });
 
-    // Reset POS after the success modal is acknowledged.
+    // Reset POS after successful payment.
     $("#success-ok")?.addEventListener("click", () => {
         successModal.hidden = true;
 
-        Object.keys(cart).forEach(id => delete cart[id]);
+        Object.keys(cart).forEach(id => {
+            delete cart[id];
+        });
 
         cash = "";
         paymentSaved = false;
@@ -286,7 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Save payment and order to Django.
     payBtn.addEventListener("click", async () => {
-        const total = getTotal();
         const cashAmount = cashToCents(cash);
         const items = getItems();
 
@@ -295,8 +383,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (!cash || cashAmount < total) {
-            payMsg.textContent = "Insufficient cash amount.";
+        if (!cash) {
+            payMsg.textContent = "Enter the cash amount.";
             return;
         }
 
@@ -305,10 +393,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const activeOrderType = $(".toggle .seg.active");
 
         const orderType = activeOrderType?.dataset.orderType ||
-            activeOrderType?.textContent.trim() || "Walk-In";
+            activeOrderType?.textContent.trim() ||
+            "Walk-In";
 
         if (!csrf || !saveUrl) {
-            payMsg.textContent = "Payment setup is incomplete. Refresh the page and try again.";
+            payMsg.textContent =
+                "Payment setup is incomplete. Refresh the page and try again.";
             return;
         }
 
@@ -324,9 +414,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "X-CSRFToken": csrf
                 },
                 body: JSON.stringify({
-                    items: items.map(([, item]) => ({
-                        name: item.name,
-                        price: centsToDecimal(item.price),
+                    items: items.map(([id, item]) => ({
+                        product_id: Number(id),
                         quantity: item.qty
                     })),
                     cash: centsToDecimal(cashAmount),
@@ -339,19 +428,34 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 result = await response.json();
             } catch {
-                throw new Error("The server returned an invalid response. Please try again.");
+                throw new Error(
+                    "The server returned an invalid response. Please try again."
+                );
             }
 
             if (!response.ok) {
-                throw new Error(result.error || "Payment failed.");
+                throw new Error(
+                    result.error || "Payment failed."
+                );
             }
 
             paymentSaved = true;
+
+            $("#order-total").textContent =
+                `₱${Number(result.total).toFixed(2)}`;
+
+            $("#pay-total").textContent =
+                `₱${Number(result.total).toFixed(2)}`;
+
+            changeInput.value =
+                `₱${Number(result.change).toFixed(2)}`;
+
             payBtn.textContent = "Paid";
             successModal.hidden = false;
 
         } catch (error) {
-            payMsg.textContent = error.message || "Payment failed. Please try again.";
+            payMsg.textContent =
+                error.message || "Payment failed. Please try again.";
 
             payBtn.disabled = false;
             payBtn.textContent = "Pay";

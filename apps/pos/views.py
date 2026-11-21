@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 from apps.orders.models import Order, OrderItem
 from apps.customers.models import Customer
+from apps.products.models import Product
 
 
 SERVICE_CHARGE = Decimal("0.00")
@@ -17,7 +18,20 @@ SERVICE_CHARGE = Decimal("0.00")
 
 @login_required
 def pos_view(request):
-    return render(request, "pos.html")
+    products = Product.objects.filter(
+        status="Available"
+    ).order_by("id")
+
+    categories = (
+        products.order_by("category")
+        .values_list("category", flat=True)
+        .distinct()
+    )
+
+    return render(request, "pos.html", {
+        "products": products,
+        "categories": categories,
+    })
 
 
 @login_required
@@ -26,17 +40,23 @@ def save_order(request):
     try:
         data = json.loads(request.body)
 
+        if not isinstance(data, dict):
+            return JsonResponse(
+                {"error": "Invalid request data."},
+                status=400
+            )
+
         items = data.get("items", [])
         cash = Decimal(str(data.get("cash", "0")))
 
         order_type = str(
-            data.get("order_type", "Walk-in")
+            data.get("order_type", "Walk-In")
         ).strip().lower()
 
         order_types = {
-            "walk-in": "Walk-in",
-            "walk in": "Walk-in",
-            "to go": "To Go"
+            "walk-in": "Walk-In",
+            "walk in": "Walk-In",
+            "to go": "To Go",
         }
 
         order_type = order_types.get(order_type)
@@ -53,68 +73,95 @@ def save_order(request):
                 status=400
             )
 
-        if cash < 0:
+        if not cash.is_finite() or cash < 0:
             return JsonResponse(
                 {"error": "Invalid cash amount."},
                 status=400
             )
 
-        subtotal = Decimal("0.00")
         validated_items = []
+        product_ids = []
 
         for item in items:
-            name = str(item.get("name", "")).strip()
-            quantity = int(item.get("quantity", 0))
-            price = Decimal(str(item.get("price", "0")))
+            if not isinstance(item, dict):
+                raise ValueError("Invalid order item.")
 
-            if not name or len(name) > 150:
-                raise ValueError("Invalid product name.")
+            product_id = int(item.get("product_id", 0))
+            quantity = int(item.get("quantity", 0))
+
+            if product_id < 1:
+                raise ValueError("Invalid product.")
 
             if quantity < 1:
                 raise ValueError("Invalid product quantity.")
 
-            if price < 0:
-                raise ValueError("Invalid product price.")
+            product_ids.append(product_id)
 
-            price = price.quantize(
+            validated_items.append({
+                "product_id": product_id,
+                "quantity": quantity,
+            })
+
+        with transaction.atomic():
+            products = Product.objects.select_for_update().filter(
+                id__in=product_ids,
+                status="Available"
+            ).in_bulk()
+
+            subtotal = Decimal("0.00")
+            order_items = []
+
+            for item in validated_items:
+                product = products.get(item["product_id"])
+
+                if not product:
+                    return JsonResponse(
+                        {
+                            "error": (
+                                "A product in your order is no longer "
+                                "available. Please refresh the POS."
+                            )
+                        },
+                        status=400
+                    )
+
+                price = product.price.quantize(
+                    Decimal("0.01"),
+                    rounding=ROUND_HALF_UP
+                )
+
+                quantity = item["quantity"]
+                subtotal += price * quantity
+
+                order_items.append({
+                    "name": product.product,
+                    "quantity": quantity,
+                    "price": price,
+                })
+
+            subtotal = subtotal.quantize(
                 Decimal("0.01"),
                 rounding=ROUND_HALF_UP
             )
 
-            subtotal += price * quantity
+            total = subtotal + SERVICE_CHARGE
 
-            validated_items.append({
-                "name": name,
-                "quantity": quantity,
-                "price": price
-            })
+            if cash < total:
+                return JsonResponse(
+                    {
+                        "error": (
+                            f"Insufficient payment. "
+                            f"Total: ₱{total:.2f}"
+                        )
+                    },
+                    status=400
+                )
 
-        subtotal = subtotal.quantize(
-            Decimal("0.01"),
-            rounding=ROUND_HALF_UP
-        )
-
-        total = subtotal + SERVICE_CHARGE
-
-        if cash < total:
-            return JsonResponse(
-                {
-                    "error": (
-                        f"Insufficient payment. "
-                        f"Total: ₱{total:.2f}"
-                    )
-                },
-                status=400
+            change = (cash - total).quantize(
+                Decimal("0.01"),
+                rounding=ROUND_HALF_UP
             )
 
-        change = (cash - total).quantize(
-            Decimal("0.01"),
-            rounding=ROUND_HALF_UP
-        )
-
-        with transaction.atomic():
-
-            # Create a NEW customer for every transaction.
             customer = Customer.objects.create(
                 name="Walk-in Customer"
             )
@@ -140,7 +187,7 @@ def save_order(request):
                     quantity=item["quantity"],
                     unit_price=item["price"]
                 )
-                for item in validated_items
+                for item in order_items
             ])
 
         return JsonResponse({

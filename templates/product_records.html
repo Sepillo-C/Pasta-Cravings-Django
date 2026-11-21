@@ -5,7 +5,6 @@
 {% block footer %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/customer_records.css' %}">
 <link rel="stylesheet" href="{% static 'css/product_records.css' %}">
 {% endblock %}
 
@@ -14,64 +13,98 @@
 {% endblock %}
 
 {% block content %}
-<div class="app">
-    <main id="product-records">
+
+<div class="product-page" id="product-records">
+
+    <main class="product-main">
+
         <section class="records-panel">
 
             <h1>Product Records</h1>
 
+            <!-- TOOLBAR -->
             <div class="toolbar">
+
                 <label class="search-box">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <path d="m20 20-4-4"></path>
+                    </svg>
+
                     <input
                         type="search"
                         id="productSearch"
                         placeholder="Search by ID or product"
+                        autocomplete="off"
                     >
                 </label>
 
                 <select id="categoryFilter" class="category-filter">
                     <option value="">All Categories</option>
+
                     {% for category in categories %}
-                    <option value="{{ category }}">{{ category }}</option>
+                    <option value="{{ category|lower }}">
+                        {{ category }}
+                    </option>
                     {% endfor %}
                 </select>
 
-                <button class="add-button" id="openAddModalBtn" type="button">
+                <button
+                    class="add-button"
+                    id="openAddModalBtn"
+                    type="button"
+                >
                     + Add Product
                 </button>
+
             </div>
 
+            <!-- PRODUCT TABLE -->
             <div class="table-container">
-                <div class="table-scroll">
-                    <table aria-label="Product records">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Product</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
 
-                        <tbody id="productTableBody">
-                            {% for item in products %}
-                            <tr class="product-row">
-                                <td data-search-id="{{ item.id }}">
-                                    P{{ item.id|stringformat:"03d" }}
-                                </td>
-                                <td>{{ item.product }}</td>
-                                <td>{{ item.category }}</td>
-                                <td>₱{{ item.price|floatformat:2 }}</td>
-                                <td>
-                                    <span class="product-status
-                                        {% if item.status == 'Available' %}available
-                                        {% else %}unavailable{% endif %}">
-                                        {{ item.status }}
-                                    </span>
-                                </td>
-                                <td>
+                <table aria-label="Product records">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="productTableBody">
+
+                        {% for item in products %}
+                        <tr class="product-row">
+
+                            <td data-search-id="{{ item.id }}">
+                                P{{ item.id|stringformat:"03d" }}
+                            </td>
+
+                            <td class="product-name">
+                                {{ item.product }}
+                            </td>
+
+                            <td class="product-category">
+                                {{ item.category }}
+                            </td>
+
+                            <td class="product-price">
+                                ₱{{ item.price|floatformat:2 }}
+                            </td>
+
+                            <td>
+                                <span class="product-status {% if item.status == 'Available' %}available{% else %}unavailable{% endif %}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="product-actions">
+
                                     <button
                                         type="button"
                                         class="edit-modal-btn"
@@ -83,111 +116,264 @@
                                     >
                                         Edit
                                     </button>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" class="empty-message">
-                                    No products registered yet.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
 
-                    <p id="noSearchResults" style="display:none; text-align:center; padding:20px;">
-                        No matching products found.
-                    </p>
-                </div>
+                                    <form
+                                        method="POST"
+                                        action="{% url 'delete_product' item.id %}"
+                                        onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone.');"
+                                    >
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="delete-product-btn"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+                        <tr class="empty-row">
+                            <td colspan="6">
+                                No products registered yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                <p id="noSearchResults" class="no-results" hidden>
+                    No matching products found.
+                </p>
+
             </div>
+
         </section>
+
     </main>
-</div>
 
-<div id="addProductModal" class="customer-modal">
-    <div class="customer-modal-content">
-        <h2>Add New Product</h2>
 
-        <form method="POST" action="{% url 'add_product' %}">
-            {% csrf_token %}
+    <!-- ADD PRODUCT MODAL -->
+    <div
+        id="addProductModal"
+        class="product-modal"
+        aria-hidden="true"
+    >
 
-            <div class="form-group">
-                <label>Product:</label>
-                <input type="text" name="product" required>
-            </div>
+        <div class="product-modal-content">
 
-            <div class="form-group">
-                <label>Category:</label>
-                <input type="text" name="category" required>
-            </div>
+            <div class="modal-header">
 
-            <div class="form-group">
-                <label>Price (₱):</label>
-                <input type="number" name="price" min="0" step="0.01" required>
-            </div>
+                <div>
+                    <h2>Add New Product</h2>
+                    <p>Enter the product details below.</p>
+                </div>
 
-            <div class="form-group">
-                <label>Status:</label>
-                <select name="status" required>
-                    <option value="Available">Available</option>
-                    <option value="Unavailable">Unavailable</option>
-                </select>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" id="closeModalBtn" class="cancel-button">
-                    Cancel
+                <button
+                    type="button"
+                    class="modal-x"
+                    id="closeModalBtn"
+                    aria-label="Close"
+                >
+                    &times;
                 </button>
-                <button type="submit" class="save-button">
-                    Save Product
-                </button>
+
             </div>
-        </form>
+
+            <form method="POST" action="{% url 'add_product' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="addProductInput">Product Name</label>
+
+                    <input
+                        type="text"
+                        id="addProductInput"
+                        name="product"
+                        placeholder="Enter product name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="addCategoryInput">Category</label>
+
+                    <input
+                        type="text"
+                        id="addCategoryInput"
+                        name="category"
+                        placeholder="Enter category"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="addPriceInput">Price (₱)</label>
+
+                    <input
+                        type="number"
+                        id="addPriceInput"
+                        name="price"
+                        min="0"
+                        step="0.01"
+                        placeholder="0.00"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="addStatusInput">Status</label>
+
+                    <select
+                        id="addStatusInput"
+                        name="status"
+                        required
+                    >
+                        <option value="Available">Available</option>
+                        <option value="Unavailable">Unavailable</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="closeAddCancelBtn"
+                        class="cancel-button"
+                    >
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="save-button">
+                        Save Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
-</div>
 
-<div id="editProductModal" class="customer-modal">
-    <div class="customer-modal-content">
-        <h2>Edit Product</h2>
 
-        <form id="editProductForm" method="POST" action="">
-            {% csrf_token %}
+    <!-- EDIT PRODUCT MODAL -->
+    <div
+        id="editProductModal"
+        class="product-modal"
+        aria-hidden="true"
+    >
 
-            <div class="form-group">
-                <label>Product:</label>
-                <input type="text" name="product" id="editProductInput" required>
-            </div>
+        <div class="product-modal-content">
 
-            <div class="form-group">
-                <label>Category:</label>
-                <input type="text" name="category" id="editCategoryInput" required>
-            </div>
+            <div class="modal-header">
 
-            <div class="form-group">
-                <label>Price (₱):</label>
-                <input type="number" name="price" id="editPriceInput"
-                       min="0" step="0.01" required>
-            </div>
+                <div>
+                    <h2>Edit Product</h2>
+                    <p>Update the product information.</p>
+                </div>
 
-            <div class="form-group">
-                <label>Status:</label>
-                <select name="status" id="editStatusInput" required>
-                    <option value="Available">Available</option>
-                    <option value="Unavailable">Unavailable</option>
-                </select>
-            </div>
-
-            <div class="modal-actions">
-                <button type="button" id="closeEditModalBtn" class="cancel-button">
-                    Cancel
+                <button
+                    type="button"
+                    class="modal-x"
+                    id="closeEditModalBtn"
+                    aria-label="Close"
+                >
+                    &times;
                 </button>
-                <button type="submit" class="save-button">
-                    Update Product
-                </button>
+
             </div>
-        </form>
+
+            <form
+                id="editProductForm"
+                method="POST"
+                action=""
+            >
+
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="editProductInput">Product Name</label>
+
+                    <input
+                        type="text"
+                        name="product"
+                        id="editProductInput"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="editCategoryInput">Category</label>
+
+                    <input
+                        type="text"
+                        name="category"
+                        id="editCategoryInput"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="editPriceInput">Price (₱)</label>
+
+                    <input
+                        type="number"
+                        name="price"
+                        id="editPriceInput"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="editStatusInput">Status</label>
+
+                    <select
+                        name="status"
+                        id="editStatusInput"
+                        required
+                    >
+                        <option value="Available">Available</option>
+                        <option value="Unavailable">Unavailable</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="closeEditCancelBtn"
+                        class="cancel-button"
+                    >
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="save-button">
+                        Update Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
+
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script src="{% static 'js/product_records.js' %}" defer></script>
 {% endblock %}

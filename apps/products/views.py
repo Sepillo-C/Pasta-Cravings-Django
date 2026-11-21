@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_POST
+
 from apps.accounts.views import admin_required
 from .models import Product
 from .forms import ProductForm
@@ -43,5 +45,14 @@ def edit_product_view(request, pk):
 
         if form.is_valid():
             form.save()
+
+    return redirect("product")
+
+
+@admin_required
+@require_POST
+def delete_product_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    product.delete()
 
     return redirect("product")
