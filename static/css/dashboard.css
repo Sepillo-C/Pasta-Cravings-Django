@@ -493,3 +493,132 @@ body:has(.sidebar.pinned) .main {
         break-inside: avoid;
     }
 }
+
+
+/* =====================================
+   SMALL DASHBOARD IMPROVEMENTS
+===================================== */
+
+/* Cleaner card appearance */
+.card {
+    border-color: var(--red);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .06);
+    transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .09);
+}
+
+/* Better heading spacing */
+.page-title {
+    line-height: 1.2;
+}
+
+.page-date {
+    line-height: 1.5;
+}
+
+/* More consistent statistics */
+.stat .label {
+    line-height: 1.5;
+}
+
+.stat .value {
+    line-height: 1.15;
+}
+
+/* Improve chart appearance */
+.gridlines {
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(66, 71, 74, .15) 0 1px,
+        transparent 1px 25%
+    );
+}
+
+.bar {
+    cursor: pointer;
+}
+
+.bar:hover {
+    filter: brightness(.88);
+}
+
+/* Better chart labels */
+.x-axis,
+.y-axis {
+    font-weight: 500;
+}
+
+/* Top-selling list */
+.top li {
+    transition: transform .2s ease;
+}
+
+.top li:hover {
+    transform: translateX(3px);
+}
+
+.rank {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
+}
+
+/* Recent expenses table */
+.recent-expenses-table th {
+    letter-spacing: .35px;
+}
+
+.recent-expenses-table td {
+    line-height: 1.5;
+}
+
+.recent-expenses-table tbody tr {
+    transition: background .2s ease;
+}
+
+/* Dropdown polish */
+.range-wrapper {
+    cursor: pointer;
+}
+
+.range:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
+}
+
+/* Better keyboard accessibility */
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+}
+
+/* Slightly tighter tablet layout */
+@media (max-width: 1100px) {
+    .stats {
+        gap: 16px;
+    }
+
+    .lower {
+        gap: 18px;
+    }
+}
+
+/* Prevent cramped chart on smaller screens */
+@media (max-width: 560px) {
+    .overview-head h2,
+    .top h2,
+    .recent-expenses-heading h2 {
+        font-size: 19px;
+    }
+
+    .stat .value {
+        font-size: 29px;
+    }
+
+    .recent-expenses-heading {
+        align-items: flex-start;
+    }
+}
