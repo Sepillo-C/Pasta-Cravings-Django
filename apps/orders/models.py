@@ -2,12 +2,22 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 
+from apps.customers.models import Customer
+
 
 class Order(models.Model):
 
     class Status(models.TextChoices):
         PREPARING = "PREPARING", "Preparing"
         COMPLETED = "COMPLETED", "Completed"
+
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="orders"
+    )
 
     customer_name = models.CharField(
         max_length=150,

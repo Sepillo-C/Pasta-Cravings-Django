@@ -9,14 +9,16 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
 from apps.orders.models import Order, OrderItem
+from apps.customers.models import Customer
 
 
-PPN_RATE = Decimal("0.11")
 SERVICE_CHARGE = Decimal("0.00")
+
 
 @login_required
 def pos_view(request):
     return render(request, "pos.html")
+
 
 @login_required
 @require_POST
@@ -27,12 +29,16 @@ def save_order(request):
         items = data.get("items", [])
         cash = Decimal(str(data.get("cash", "0")))
 
-        order_type = str(data.get("order_type", "Walk-in")).strip().lower()
+        order_type = str(
+            data.get("order_type", "Walk-in")
+        ).strip().lower()
+
         order_types = {
             "walk-in": "Walk-in",
             "walk in": "Walk-in",
             "to go": "To Go"
         }
+
         order_type = order_types.get(order_type)
 
         if not order_type:
@@ -44,6 +50,12 @@ def save_order(request):
         if not isinstance(items, list) or not items:
             return JsonResponse(
                 {"error": "Your order is empty."},
+                status=400
+            )
+
+        if cash < 0:
+            return JsonResponse(
+                {"error": "Invalid cash amount."},
                 status=400
             )
 
@@ -64,6 +76,11 @@ def save_order(request):
             if price < 0:
                 raise ValueError("Invalid product price.")
 
+            price = price.quantize(
+                Decimal("0.01"),
+                rounding=ROUND_HALF_UP
+            )
+
             subtotal += price * quantity
 
             validated_items.append({
@@ -77,30 +94,40 @@ def save_order(request):
             rounding=ROUND_HALF_UP
         )
 
-        ppn = (subtotal * PPN_RATE).quantize(
+        total = subtotal + SERVICE_CHARGE
+
+        if cash < total:
+            return JsonResponse(
+                {
+                    "error": (
+                        f"Insufficient payment. "
+                        f"Total: ₱{total:.2f}"
+                    )
+                },
+                status=400
+            )
+
+        change = (cash - total).quantize(
             Decimal("0.01"),
             rounding=ROUND_HALF_UP
         )
 
-        total = subtotal + SERVICE_CHARGE + ppn
+        with transaction.atomic():
 
-        if cash < total:
-            return JsonResponse(
-                {"error": "Insufficient payment."},
-                status=400
+            # Create a NEW customer for every transaction.
+            customer = Customer.objects.create(
+                name="Walk-in Customer"
             )
 
-        change = cash - total
-
-        with transaction.atomic():
             order = Order.objects.create(
-                customer_name="Walk-in Customer",
+                customer=customer,
+                customer_name=customer.name,
                 status=Order.Status.PREPARING,
                 payment_method="Cash",
                 order_type=order_type,
                 subtotal=subtotal,
                 service_charge=SERVICE_CHARGE,
-                ppn=ppn,
+                ppn=Decimal("0.00"),
                 total_amount=total,
                 cash_received=cash,
                 change_amount=change

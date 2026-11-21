@@ -1,48 +1,41 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Sum
+from django.db.models.functions import Coalesce
+from django.contrib import messages
+
 from apps.accounts.views import admin_required
 from .models import Customer
-from .forms import CustomerForm
 
 
 @admin_required
 def customer_view(request):
-    customers_list = Customer.objects.all()
+    customers_list = (
+        Customer.objects
+        .annotate(
+            total_orders=Coalesce(
+                Sum("orders__items__quantity"),
+                0
+            )
+        )
+        .order_by("id")
+    )
 
-    context = {
+    return render(request, "customer_records.html", {
         "customers": customers_list,
-        "form": CustomerForm(),
-    }
-
-    return render(request, "customer_records.html", context)
+    })
 
 
 @admin_required
-def add_customer_view(request):
+def delete_customer_view(request, pk):
     if request.method == "POST":
-        form = CustomerForm(request.POST)
+        customer = get_object_or_404(Customer, pk=pk)
+        customer_id = customer.pk
 
-        if form.is_valid():
-            form.save()
-            return redirect("customer")
+        customer.delete()
 
-        customers_list = Customer.objects.all()
-
-        return render(request, "customer_records.html", {
-            "customers": customers_list,
-            "form": form,
-        })
-
-    return redirect("customer")
-
-
-@admin_required
-def edit_customer_view(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
-
-    if request.method == "POST":
-        form = CustomerForm(request.POST, instance=customer)
-
-        if form.is_valid():
-            form.save()
+        messages.success(
+            request,
+            f"Customer C{customer_id:03d} deleted successfully."
+        )
 
     return redirect("customer")

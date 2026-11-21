@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const $ = selector => document.querySelector(selector);
-    const $$ = selector => document.querySelectorAll(selector);
-    const money = amount => `₱${amount.toFixed(2)}`;
+    const $$ = selector => [...document.querySelectorAll(selector)];
 
     const cards = $$(".menu-grid .card");
     const cart = {};
@@ -14,18 +13,104 @@ document.addEventListener("DOMContentLoaded", () => {
     const payMsg = $("#pay-msg");
     const payBtn = $("#pay-btn");
     const successModal = $("#success-modal");
+    const checkoutBtn = $("#checkout-btn");
+    const keypad = $("#keypad");
+    const page = $(".page");
+
+    if (!cards.length || !orderBody || !orderPanel || !payPanel ||
+        !cashInput || !changeInput || !payMsg || !payBtn ||
+        !successModal || !checkoutBtn || !keypad || !page) {
+        return;
+    }
 
     let cash = "";
     let paymentSaved = false;
+    let activeCategory = "all";
+    let searchQuery = "";
 
-    // CALCULATE TOTAL
-    const getTotal = () => Object.values(cart)
-        .reduce((sum, item) => sum + item.price * item.qty, 0);
+    // Store money as integer centavos to avoid floating-point errors.
+    const money = cents => `₱${(cents / 100).toFixed(2)}`;
+    const centsToDecimal = cents => (cents / 100).toFixed(2);
 
-    // UPDATE ORDER DISPLAY
+    const toCents = value => {
+        const cleaned = String(value).replace(/[^\d.]/g, "");
+        const [whole = "0", decimal = ""] = cleaned.split(".");
+        const pesos = Number.parseInt(whole || "0", 10);
+        const centavos = Number.parseInt((decimal + "00").slice(0, 2), 10);
+
+        return (Number.isFinite(pesos) ? pesos : 0) * 100 +
+            (Number.isFinite(centavos) ? centavos : 0);
+    };
+
+    const cashToCents = value => {
+        if (!value) return 0;
+
+        const [whole = "0", decimal = ""] = String(value).split(".");
+        const pesos = Number.parseInt(whole || "0", 10);
+        const centavos = Number.parseInt((decimal + "00").slice(0, 2), 10);
+
+        return (Number.isFinite(pesos) ? pesos : 0) * 100 +
+            (Number.isFinite(centavos) ? centavos : 0);
+    };
+
+    const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[character]);
+
+    const getTotal = () => Object.values(cart).reduce(
+        (sum, item) => sum + item.price * item.qty,
+        0
+    );
+
+    const getItems = () => Object.entries(cart).filter(
+        ([, item]) => item.qty > 0
+    );
+
+    // Search and category filters work together.
+    const filterProducts = () => {
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const name = card.querySelector("h3")?.textContent.trim().toLowerCase() || "";
+            const matchesCategory = activeCategory === "all" ||
+                card.dataset.category === activeCategory;
+            const matchesSearch = name.includes(searchQuery);
+            const visible = matchesCategory && matchesSearch;
+
+            card.hidden = !visible;
+            if (visible) visibleCount++;
+        });
+
+        let noResults = $(".menu-grid .no-results");
+
+        if (!noResults) {
+            noResults = document.createElement("p");
+            noResults.className = "no-results";
+            noResults.textContent = "No products found.";
+            noResults.hidden = true;
+            $(".menu-grid")?.append(noResults);
+        }
+
+        if (noResults) {
+            noResults.hidden = visibleCount > 0;
+        }
+    };
+
+    const updatePaymentDisplay = () => {
+        const enteredCash = cashToCents(cash);
+        const change = enteredCash - getTotal();
+
+        cashInput.value = cash ? money(enteredCash) : "";
+        changeInput.value = cash && change >= 0 ? money(change) : "";
+    };
+
     const render = () => {
         const total = getTotal();
-        const items = Object.entries(cart).filter(([, item]) => item.qty > 0);
+        const items = getItems();
 
         $("#order-total").textContent = money(total);
         $("#pay-total").textContent = money(total);
@@ -36,127 +121,87 @@ document.addEventListener("DOMContentLoaded", () => {
             ? items.map(([id, item]) => `
                 <div class="order-item" data-id="${id}">
                     <div class="item-info">
-                        <strong>${item.name}</strong>
+                        <strong>${escapeHTML(item.name)}</strong>
                         <small>${money(item.price)} each</small>
                     </div>
 
                     <div class="item-bottom">
                         <div class="quantity-controls">
-                            <button
-                                type="button"
-                                data-action="minus"
-                                aria-label="Decrease quantity"
-                            >−</button>
-
+                            <button type="button" data-action="minus" aria-label="Decrease quantity">−</button>
                             <span>${item.qty}</span>
-
-                            <button
-                                type="button"
-                                data-action="plus"
-                                aria-label="Increase quantity"
-                            >+</button>
-
-                            <button
-                                type="button"
-                                data-action="remove"
-                                class="remove-item"
-                                aria-label="Remove item"
-                            >×</button>
+                            <button type="button" data-action="plus" aria-label="Increase quantity">+</button>
+                            <button type="button" data-action="remove" class="remove-item" aria-label="Remove item">×</button>
                         </div>
 
-                        <strong class="item-total">
-                            ${money(item.price * item.qty)}
-                        </strong>
+                        <strong class="item-total">${money(item.price * item.qty)}</strong>
                     </div>
                 </div>
             `).join("")
             : '<p class="no-tx">No Transaction</p>';
 
-        $("#checkout-btn").disabled = items.length === 0;
+        checkoutBtn.disabled = items.length === 0;
+        updatePaymentDisplay();
     };
 
-    // ADD PRODUCTS TO CART
+    // Add menu products to the cart.
     cards.forEach((card, index) => {
         const name = card.querySelector("h3")?.textContent.trim();
-        const price = Number(
-            card.querySelector(".price")?.textContent.replace(/[^\d.]/g, "")
-        );
+        const price = toCents(card.querySelector(".price")?.textContent || "0");
 
-        if (!name || !Number.isFinite(price)) return;
+        if (!name || price < 0) return;
 
-        card.dataset.id = index;
+        card.dataset.id = String(index);
 
         card.addEventListener("click", () => {
-            cart[index] ??= {
-                name,
-                price,
-                qty: 0
-            };
+            if (card.classList.contains("sold-out")) return;
 
+            cart[index] ??= { name, price, qty: 0 };
             cart[index].qty++;
+
             render();
         });
     });
 
-    // CART QUANTITY CONTROLS
+    // Cart quantity controls.
     orderBody.addEventListener("click", event => {
-        const button = event.target.closest("button");
+        const button = event.target.closest("button[data-action]");
         if (!button) return;
 
         const row = button.closest("[data-id]");
-        if (!row) return;
-
-        const id = row.dataset.id;
-        const item = cart[id];
+        const item = row ? cart[row.dataset.id] : null;
 
         if (!item) return;
 
-        switch (button.dataset.action) {
-            case "plus":
-                item.qty++;
-                break;
-
-            case "minus":
-                item.qty--;
-                break;
-
-            case "remove":
-                item.qty = 0;
-                break;
-        }
+        if (button.dataset.action === "plus") item.qty++;
+        if (button.dataset.action === "minus") item.qty--;
+        if (button.dataset.action === "remove") item.qty = 0;
 
         if (item.qty <= 0) {
-            delete cart[id];
+            delete cart[row.dataset.id];
         }
 
         render();
     });
 
-    // PRODUCT SEARCH
+    // Product search.
     $(".menu-panel .search input")?.addEventListener("input", event => {
-        const query = event.target.value.toLowerCase();
-
-        cards.forEach(card => {
-            const name = card.querySelector("h3")?.textContent.toLowerCase() || "";
-            card.hidden = !name.includes(query);
-        });
+        searchQuery = event.target.value.trim().toLowerCase();
+        filterProducts();
     });
 
-    // CATEGORY FILTER
+    // Category filter.
     $$(".chip").forEach(button => {
         button.addEventListener("click", () => {
             $$(".chip").forEach(chip => chip.classList.remove("active"));
-            button.classList.add("active");
 
-            cards.forEach(card => {
-                card.hidden =
-                    button.dataset.category !== "all" &&
-                    card.dataset.category !== button.dataset.category;
-            });
+            button.classList.add("active");
+            activeCategory = button.dataset.category || "all";
+
+            filterProducts();
         });
     });
 
-    // ORDER TYPE
+    // Order type selection.
     $$(".toggle .seg").forEach(button => {
         button.addEventListener("click", () => {
             $$(".toggle .seg").forEach(seg => seg.classList.remove("active"));
@@ -164,14 +209,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // CHECKOUT
-    $("#checkout-btn").addEventListener("click", () => {
-        if (!Object.keys(cart).length) return;
+    // Open payment panel.
+    checkoutBtn.addEventListener("click", () => {
+        if (!getItems().length) return;
 
-        orderPanel.hidden = true;
-        payPanel.hidden = false;
-
+        paymentSaved = false;
         cash = "";
+
         cashInput.value = "";
         changeInput.value = "";
         payMsg.textContent = "";
@@ -179,42 +223,47 @@ document.addEventListener("DOMContentLoaded", () => {
         payBtn.disabled = false;
         payBtn.textContent = "Pay";
 
+        orderPanel.hidden = true;
+        payPanel.hidden = false;
+
         render();
     });
 
-    // BACK TO ORDER
-    $("#pay-back").addEventListener("click", () => {
+    // Return to the order panel before payment is saved.
+    $("#pay-back")?.addEventListener("click", () => {
         if (paymentSaved) return;
 
         payPanel.hidden = true;
         orderPanel.hidden = false;
     });
 
-    // NUMERIC KEYPAD
-    $("#keypad").addEventListener("click", event => {
+    // Numeric keypad.
+    keypad.addEventListener("click", event => {
         const key = event.target.closest("button")?.dataset.key;
 
         if (!key || paymentSaved) return;
 
         if (key === "back") {
             cash = cash.slice(0, -1);
-        } else if (key !== "ok") {
+        } else if (key === ".") {
+            if (cash.includes(".")) return;
+
+            cash = cash || "0";
+            cash += ".";
+        } else if (/^\d+$/.test(key)) {
+            if (cash.includes(".") && cash.split(".")[1].length >= 2) return;
+
             cash += key;
+        } else {
+            return;
         }
 
-        cashInput.value = cash ? money(Number(cash)) : "";
-
-        const change = Number(cash) - getTotal();
-
-        changeInput.value = change >= 0
-            ? money(change)
-            : "";
-
+        updatePaymentDisplay();
         payMsg.textContent = "";
     });
 
-    // PAYMENT SUCCESS MODAL
-    $("#success-ok").addEventListener("click", () => {
+    // Reset POS after the success modal is acknowledged.
+    $("#success-ok")?.addEventListener("click", () => {
         successModal.hidden = true;
 
         Object.keys(cart).forEach(id => delete cart[id]);
@@ -235,26 +284,37 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
     });
 
-    // SAVE PAYMENT TO DJANGO
+    // Save payment and order to Django.
     payBtn.addEventListener("click", async () => {
         const total = getTotal();
+        const cashAmount = cashToCents(cash);
+        const items = getItems();
 
-        if (!Object.keys(cart).length) {
+        if (!items.length) {
             payMsg.textContent = "No transaction to pay.";
             return;
         }
 
-        if (!cash || Number(cash) < total) {
+        if (!cash || cashAmount < total) {
             payMsg.textContent = "Insufficient cash amount.";
             return;
         }
 
         const csrf = $('[name="csrfmiddlewaretoken"]')?.value;
-        const saveUrl = $(".page").dataset.saveUrl;
-        const orderType = $(".toggle .seg.active")?.dataset.orderType || "Walk-In";
+        const saveUrl = page.dataset.saveUrl;
+        const activeOrderType = $(".toggle .seg.active");
+
+        const orderType = activeOrderType?.dataset.orderType ||
+            activeOrderType?.textContent.trim() || "Walk-In";
+
+        if (!csrf || !saveUrl) {
+            payMsg.textContent = "Payment setup is incomplete. Refresh the page and try again.";
+            return;
+        }
 
         payBtn.disabled = true;
         payBtn.textContent = "Processing...";
+        payMsg.textContent = "";
 
         try {
             const response = await fetch(saveUrl, {
@@ -264,17 +324,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     "X-CSRFToken": csrf
                 },
                 body: JSON.stringify({
-                    items: Object.values(cart).map(item => ({
+                    items: items.map(([, item]) => ({
                         name: item.name,
-                        price: item.price,
+                        price: centsToDecimal(item.price),
                         quantity: item.qty
                     })),
-                    cash,
+                    cash: centsToDecimal(cashAmount),
                     order_type: orderType
                 })
             });
 
-            const result = await response.json();
+            let result;
+
+            try {
+                result = await response.json();
+            } catch {
+                throw new Error("The server returned an invalid response. Please try again.");
+            }
 
             if (!response.ok) {
                 throw new Error(result.error || "Payment failed.");
@@ -285,12 +351,13 @@ document.addEventListener("DOMContentLoaded", () => {
             successModal.hidden = false;
 
         } catch (error) {
-            payMsg.textContent = error.message;
+            payMsg.textContent = error.message || "Payment failed. Please try again.";
+
             payBtn.disabled = false;
             payBtn.textContent = "Pay";
         }
     });
 
-    // INITIAL DISPLAY
+    filterProducts();
     render();
 });
