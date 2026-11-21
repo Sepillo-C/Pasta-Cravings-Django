@@ -23,14 +23,16 @@ body {
     overflow-x: hidden;
 }
 
-select { font: inherit; }
+select {
+    font: inherit;
+}
 
 /* MAIN LAYOUT */
 
 .main {
     width: 100%;
     min-height: 100vh;
-    padding: 38px 38px 45px calc(var(--sidebar-w) + 30px);
+    padding: 24px 28px 30px calc(var(--sidebar-w) + 30px);
     background: var(--bg);
     transition: padding-left var(--shift-time) var(--shift-ease);
 }
@@ -44,12 +46,13 @@ body:has(.sidebar.pinned) .main {
 /* HEADING */
 
 .page-heading {
-    margin-bottom: 26px;
+    margin-bottom: 18px;
 }
 
 .page-title {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 800;
+    line-height: 1.2;
     letter-spacing: .5px;
 }
 
@@ -58,8 +61,9 @@ body:has(.sidebar.pinned) .main {
     align-items: center;
     gap: 8px;
     margin-top: 8px;
-    font-size: 13px;
     color: #34383B;
+    font-size: 13px;
+    line-height: 1.5;
 }
 
 .calendar-icon {
@@ -79,11 +83,16 @@ body:has(.sidebar.pinned) .main {
 
 .card {
     min-width: 0;
-    padding: 25px;
+    padding: 18px;
     background: var(--white);
     border: var(--border);
-    border-radius: 14px;
-    box-shadow: 0 3px 8px #00000012;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .06);
+    transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .09);
 }
 
 /* STATISTICS */
@@ -91,14 +100,13 @@ body:has(.sidebar.pinned) .main {
 .stats {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 20px;
-    margin-top: 0;
+    gap: 12px;
 }
 
 .stat {
     grid-column: span 2;
-    min-height: 132px;
-    padding: 22px 18px;
+    min-height: 100px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -118,17 +126,19 @@ body:has(.sidebar.pinned) .main {
 }
 
 .stat .label {
-    font-size: 14px;
-    font-weight: 600;
     color: #34383B;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
 }
 
 .stat .value {
     max-width: 100%;
-    margin-top: 12px;
+    margin-top: 7px;
     color: var(--red);
-    font-size: clamp(26px, 2.3vw, 35px);
+    font-size: clamp(22px, 2vw, 29px);
     font-weight: 800;
+    line-height: 1.15;
     overflow-wrap: anywhere;
 }
 
@@ -137,14 +147,14 @@ body:has(.sidebar.pinned) .main {
 .lower {
     display: grid;
     grid-template-columns: minmax(0, 2.5fr) minmax(250px, 1fr);
-    gap: 22px;
-    margin-top: 25px;
+    gap: 14px;
+    margin-top: 16px;
     align-items: stretch;
 }
 
 .overview-card,
 .top {
-    min-height: 390px;
+    min-height: 310px;
 }
 
 .overview-card {
@@ -160,15 +170,16 @@ body:has(.sidebar.pinned) .main {
 }
 
 .overview-head h2,
-.top h2 {
-    font-size: 21px;
+.top h2,
+.recent-expenses-heading h2 {
+    font-size: 19px;
     font-weight: 800;
 }
 
 /* RANGE DROPDOWN */
 
 .range-wrapper {
-    min-height: 40px;
+    min-height: 38px;
     padding: 0 12px;
     display: flex;
     align-items: center;
@@ -176,13 +187,16 @@ body:has(.sidebar.pinned) .main {
     color: var(--white);
     background: var(--gray);
     border-radius: 8px;
+    cursor: pointer;
     transition: background .2s ease;
 }
 
-.range-wrapper:hover { background: #303437; }
+.range-wrapper:hover {
+    background: #303437;
+}
 
 .range {
-    min-height: 40px;
+    min-height: 38px;
     padding: 6px 0;
     color: var(--white);
     background: transparent;
@@ -205,14 +219,21 @@ body:has(.sidebar.pinned) .main {
     pointer-events: none;
 }
 
-.range-calendar { width: 17px; height: 17px; }
-.range-arrow { width: 14px; height: 14px; }
+.range-calendar {
+    width: 17px;
+    height: 17px;
+}
+
+.range-arrow {
+    width: 14px;
+    height: 14px;
+}
 
 /* BAR GRAPH */
 
 .chart {
-    height: 290px;
-    margin-top: 30px;
+    height: 220px;
+    margin-top: 18px;
     display: grid;
     grid-template-columns: 48px minmax(0, 1fr);
     gap: 14px;
@@ -225,6 +246,7 @@ body:has(.sidebar.pinned) .main {
     padding-bottom: 28px;
     color: #666;
     font-size: 12px;
+    font-weight: 500;
 }
 
 .plot {
@@ -238,7 +260,7 @@ body:has(.sidebar.pinned) .main {
     flex: 1;
     background: repeating-linear-gradient(
         to bottom,
-        #ddd 0 1px,
+        rgba(66, 71, 74, .15) 0 1px,
         transparent 1px 25%
     );
     border-bottom: 1px solid #aaa;
@@ -261,10 +283,14 @@ body:has(.sidebar.pinned) .main {
     background: var(--red);
     border-radius: 6px 6px 0 0;
     transform-origin: bottom;
+    cursor: pointer;
     transition: height .3s ease, background-color .2s ease;
 }
 
-.bar:hover { background: #A02E2F; }
+.bar:hover {
+    background: #A02E2F;
+    filter: brightness(.88);
+}
 
 .x-axis {
     height: 30px;
@@ -274,15 +300,18 @@ body:has(.sidebar.pinned) .main {
     gap: 14px;
     color: #555;
     font-size: 12px;
+    font-weight: 500;
 }
 
 /* TOP SELLING */
 
-.top h2 { margin-bottom: 24px; }
+.top h2 {
+    margin-bottom: 16px;
+}
 
 .top ol {
     display: grid;
-    gap: 18px;
+    gap: 12px;
     list-style: none;
 }
 
@@ -293,6 +322,11 @@ body:has(.sidebar.pinned) .main {
     color: #34383B;
     font-size: 13px;
     line-height: 1.5;
+    transition: transform .2s ease;
+}
+
+.top li:hover {
+    transform: translateX(3px);
 }
 
 .rank {
@@ -306,12 +340,13 @@ body:has(.sidebar.pinned) .main {
     border-radius: 50%;
     font-size: 12px;
     font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
 }
 
 /* RECENT EXPENSES */
 
 .recent-expenses {
-    margin-top: 25px;
+    margin-top: 16px;
 }
 
 .recent-expenses-heading {
@@ -319,12 +354,7 @@ body:has(.sidebar.pinned) .main {
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    margin-bottom: 22px;
-}
-
-.recent-expenses-heading h2 {
-    font-size: 21px;
-    font-weight: 800;
+    margin-bottom: 12px;
 }
 
 .recent-expenses-heading a {
@@ -334,7 +364,9 @@ body:has(.sidebar.pinned) .main {
     text-decoration: none;
 }
 
-.recent-expenses-heading a:hover { text-decoration: underline; }
+.recent-expenses-heading a:hover {
+    text-decoration: underline;
+}
 
 .recent-expenses-table {
     width: 100%;
@@ -347,25 +379,35 @@ body:has(.sidebar.pinned) .main {
     border-collapse: collapse;
 }
 
-.recent-expenses-table thead { background: #FFF6F3; }
+.recent-expenses-table thead {
+    background: #FFF6F3;
+}
 
 .recent-expenses-table th {
-    padding: 15px;
+    padding: 12px 15px;
     color: var(--red);
     text-align: left;
     font-size: 12px;
     font-weight: 800;
+    letter-spacing: .35px;
     text-transform: uppercase;
 }
 
 .recent-expenses-table td {
-    padding: 16px 15px;
+    padding: 12px 15px;
     border-bottom: 1px solid #EEE;
     color: #34383B;
     font-size: 13px;
+    line-height: 1.5;
 }
 
-.recent-expenses-table tbody tr:hover { background: #FFFEF8; }
+.recent-expenses-table tbody tr {
+    transition: background .2s ease;
+}
+
+.recent-expenses-table tbody tr:hover {
+    background: #FFFEF8;
+}
 
 .recent-expenses-table .expense-amount {
     color: var(--red);
@@ -392,8 +434,13 @@ body:has(.sidebar.pinned) .main {
         padding-left: calc(var(--sidebar-w-open) + 22px);
     }
 
+    .stats {
+        gap: 16px;
+    }
+
     .lower {
         grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+        gap: 18px;
     }
 }
 
@@ -412,8 +459,18 @@ body:has(.sidebar.pinned) .main {
         grid-template-columns: 1fr;
     }
 
+    .overview-card,
+    .top {
+        min-height: 280px;
+    }
+
     .top ol {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main {
+        padding-top: 20px;
+        padding-right: 18px;
     }
 }
 
@@ -427,9 +484,13 @@ body:has(.sidebar.pinned) .main {
         padding: 20px 14px 30px;
     }
 
-    .page-heading { margin-bottom: 20px; }
+    .page-heading {
+        margin-bottom: 20px;
+    }
 
-    .page-title { font-size: 26px; }
+    .page-title {
+        font-size: 26px;
+    }
 
     .stats,
     .top ol {
@@ -440,7 +501,8 @@ body:has(.sidebar.pinned) .main {
     .stat:nth-child(4),
     .stat:nth-child(5) {
         grid-column: span 1;
-        min-height: 112px;
+        min-height: 100px;
+        padding: 12px;
     }
 
     .lower {
@@ -448,22 +510,56 @@ body:has(.sidebar.pinned) .main {
         margin-top: 20px;
     }
 
-    .card { padding: 18px; }
+    .card {
+        padding: 14px;
+    }
 
     .overview-head {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    .overview-head h2,
+    .top h2,
+    .recent-expenses-heading h2 {
+        font-size: 19px;
+    }
+
     .chart {
-        height: 240px;
+        height: 190px;
         grid-template-columns: 38px 1fr;
     }
 
-    .bars { gap: 5px; padding: 0 4px; }
-    .bar { min-width: 9px; }
+    .bars {
+        gap: 5px;
+        padding: 0 4px;
+    }
 
-    .recent-expenses { margin-top: 20px; }
+    .bar {
+        min-width: 9px;
+    }
+
+    .recent-expenses {
+        margin-top: 20px;
+    }
+
+    .recent-expenses-heading {
+        align-items: flex-start;
+    }
+}
+
+/* FOCUS */
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+}
+
+.range:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 3px;
 }
 
 /* REDUCED MOTION */
@@ -472,7 +568,9 @@ body:has(.sidebar.pinned) .main {
     .main,
     .bar,
     .range-wrapper,
-    .stat {
+    .stat,
+    .card,
+    .top li {
         transition: none;
     }
 }
@@ -480,7 +578,9 @@ body:has(.sidebar.pinned) .main {
 /* PRINT */
 
 @media print {
-    .sidebar { display: none !important; }
+    .sidebar {
+        display: none !important;
+    }
 
     .main {
         width: 100%;
@@ -491,134 +591,5 @@ body:has(.sidebar.pinned) .main {
     .card {
         box-shadow: none;
         break-inside: avoid;
-    }
-}
-
-
-/* =====================================
-   SMALL DASHBOARD IMPROVEMENTS
-===================================== */
-
-/* Cleaner card appearance */
-.card {
-    border-color: var(--red);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, .06);
-    transition: box-shadow .25s ease, transform .25s ease;
-}
-
-.card:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, .09);
-}
-
-/* Better heading spacing */
-.page-title {
-    line-height: 1.2;
-}
-
-.page-date {
-    line-height: 1.5;
-}
-
-/* More consistent statistics */
-.stat .label {
-    line-height: 1.5;
-}
-
-.stat .value {
-    line-height: 1.15;
-}
-
-/* Improve chart appearance */
-.gridlines {
-    background: repeating-linear-gradient(
-        to bottom,
-        rgba(66, 71, 74, .15) 0 1px,
-        transparent 1px 25%
-    );
-}
-
-.bar {
-    cursor: pointer;
-}
-
-.bar:hover {
-    filter: brightness(.88);
-}
-
-/* Better chart labels */
-.x-axis,
-.y-axis {
-    font-weight: 500;
-}
-
-/* Top-selling list */
-.top li {
-    transition: transform .2s ease;
-}
-
-.top li:hover {
-    transform: translateX(3px);
-}
-
-.rank {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12);
-}
-
-/* Recent expenses table */
-.recent-expenses-table th {
-    letter-spacing: .35px;
-}
-
-.recent-expenses-table td {
-    line-height: 1.5;
-}
-
-.recent-expenses-table tbody tr {
-    transition: background .2s ease;
-}
-
-/* Dropdown polish */
-.range-wrapper {
-    cursor: pointer;
-}
-
-.range:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 3px;
-}
-
-/* Better keyboard accessibility */
-button:focus-visible,
-a:focus-visible,
-select:focus-visible {
-    outline: 2px solid var(--red);
-    outline-offset: 3px;
-}
-
-/* Slightly tighter tablet layout */
-@media (max-width: 1100px) {
-    .stats {
-        gap: 16px;
-    }
-
-    .lower {
-        gap: 18px;
-    }
-}
-
-/* Prevent cramped chart on smaller screens */
-@media (max-width: 560px) {
-    .overview-head h2,
-    .top h2,
-    .recent-expenses-heading h2 {
-        font-size: 19px;
-    }
-
-    .stat .value {
-        font-size: 29px;
-    }
-
-    .recent-expenses-heading {
-        align-items: flex-start;
     }
 }
