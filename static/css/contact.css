@@ -9,43 +9,75 @@
 html,
 body {
     width: 100%;
-    min-height: 100%;
+    height: 100%;
 }
 
 body {
     background: #FBF9E4;
-    overflow-x: clip;
+    overflow: hidden;
 }
 
 .page-layout {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* CONTACT PAGE */
 
 .contact-page {
+    position: relative;
+    isolation: isolate;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-content: center;
+    align-items: center;
     gap: 7%;
     flex: 1;
     width: 100%;
-    padding: 45px 6%;
+    min-height: 0;
+    padding: 35px 6%;
+    overflow: hidden;
     background: #FBF9E4;
     color: #A02E2F;
     font-family: "Montserrat", sans-serif;
     border-bottom: 3px solid #A02E2F;
 }
 
+/* DECORATIONS */
+
+.contact-decoration {
+    position: absolute;
+    z-index: -1;
+    width: 280px;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.login-top-right {
+    top: 0;
+    right: 0;
+}
+
+.login-bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
 /* LEFT SIDE */
+
+.contact-info {
+    position: relative;
+    z-index: 1;
+}
 
 .contact-info h1 {
     margin-bottom: 18px;
     color: #B53238;
     font-family: "Playfair Display", serif;
-    font-size: clamp(48px, 7vw, 72px);
+    font-size: clamp(48px, 6vw, 72px);
     font-weight: 700;
     line-height: 1.1;
 }
@@ -95,6 +127,8 @@ body {
 /* CONTACT FORM */
 
 .contact-form-section {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
 }
@@ -102,7 +136,7 @@ body {
 .contact-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 17px;
     width: 100%;
 }
 
@@ -137,7 +171,7 @@ body {
 
 .form-group textarea {
     height: 75px;
-    resize: vertical;
+    resize: none;
 }
 
 .form-group input:focus,
@@ -174,7 +208,7 @@ body {
 @media (max-width: 850px) {
     .contact-page {
         gap: 5%;
-        padding: 35px 5%;
+        padding: 25px 5%;
     }
 
     .contact-info h1 {
@@ -185,15 +219,30 @@ body {
     .contact-message {
         font-size: 12px;
     }
+
+    .contact-decoration {
+        width: 210px;
+    }
 }
 
 /* MOBILE */
 
 @media (max-width: 700px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .page-layout {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+    }
+
     .contact-page {
         grid-template-columns: 1fr;
-        gap: 35px;
+        gap: 30px;
         padding: 30px 7%;
+        overflow: hidden;
     }
 
     .contact-info h1 {
@@ -202,6 +251,10 @@ body {
 
     .contact-form-section {
         width: 100%;
+    }
+
+    .contact-decoration {
+        width: 160px;
     }
 }
 
@@ -217,5 +270,9 @@ body {
     .contact-detail p,
     .contact-message {
         font-size: 11px;
+    }
+
+    .contact-decoration {
+        width: 125px;
     }
 }
